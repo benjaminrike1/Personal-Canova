@@ -1,9 +1,12 @@
+import logging
+
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
 
 from backend.core.database import init_db
+from backend.services.reminders import ReminderService
 from backend.api import (
     checkins,
     chat,
@@ -20,6 +23,8 @@ from backend.api import (
     phases,
 )
 
+logging.basicConfig(level=logging.INFO)
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 app = FastAPI(title="Coach", version="0.1.0")
@@ -28,10 +33,22 @@ app = FastAPI(title="Coach", version="0.1.0")
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
+reminder_service = ReminderService()
+
 
 @app.on_event("startup")
 async def startup():
     init_db()
+    # Start email reminder scheduler
+    try:
+        reminder_service.schedule_all()
+    except Exception as e:
+        logging.warning(f"Failed to start reminder scheduler: {e}")
+
+
+@app.on_event("shutdown")
+async def shutdown():
+    reminder_service.stop()
 
 
 # --- Page routes ---
