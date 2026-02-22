@@ -69,6 +69,7 @@ CREATE TABLE races (
     goal_notes      TEXT,                          -- e.g. "sub-40 10k"
     result_time_s   REAL,                          -- actual result (filled post-race)
     result_notes    TEXT,
+    notes           TEXT,                          -- narrative race analysis: conditions, how it went, lessons learned
     status          TEXT NOT NULL DEFAULT 'upcoming' CHECK (status IN ('upcoming', 'completed', 'dns', 'dnf', 'cancelled')),
     created_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
     updated_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
@@ -76,6 +77,28 @@ CREATE TABLE races (
 
 CREATE INDEX idx_races_date ON races(date);
 CREATE INDEX idx_races_priority ON races(priority);
+
+-- ============================================================
+-- TRAINING PHASES
+-- ============================================================
+-- The current active phase is always injected into coaching context.
+-- Critical for interpreting CTL correctly when sport focus shifts —
+-- a dropping CTL during a run-focus block after a triathlon period
+-- is expected and should not trigger concern.
+CREATE TABLE training_phases (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    name            TEXT,                          -- e.g. "Marathon base build", "Tri season"
+    start_date      TEXT NOT NULL,                 -- ISO date
+    end_date        TEXT,                          -- ISO date, NULL = open-ended / current
+    primary_sport_focus TEXT NOT NULL CHECK (primary_sport_focus IN ('run', 'bike', 'triathlon', 'other')),
+    phase_type      TEXT NOT NULL CHECK (phase_type IN ('base', 'build', 'peak', 'taper', 'recovery')),
+    target_race_id  INTEGER REFERENCES races(id),  -- optional link to target A-race
+    notes           TEXT,
+    created_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+    updated_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+);
+
+CREATE INDEX idx_phases_dates ON training_phases(start_date, end_date);
 
 -- ============================================================
 -- ACTIVITIES (synced from Intervals.icu)
@@ -137,6 +160,36 @@ CREATE TABLE weather_cache (
 CREATE INDEX idx_weather_activity ON weather_cache(activity_id);
 
 -- ============================================================
+-- DAILY WEATHER (home location, every day including rest days)
+-- ============================================================
+-- Uses athlete_profile.location_lat/lon. Ensures rest days and
+-- easy days still have weather context so the coach can interpret
+-- fatigue and subjective feel correctly.
+CREATE TABLE daily_weather (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    date            TEXT NOT NULL UNIQUE,           -- ISO date
+    latitude        REAL NOT NULL,
+    longitude       REAL NOT NULL,
+    temperature_high_c  REAL,
+    temperature_low_c   REAL,
+    temperature_mean_c  REAL,
+    feels_like_high_c   REAL,
+    feels_like_low_c    REAL,
+    humidity_mean_pct    REAL,
+    wind_speed_max_kmh   REAL,
+    wind_gust_max_kmh    REAL,
+    precipitation_sum_mm REAL,
+    weather_code    INTEGER,                       -- WMO code (dominant)
+    description     TEXT,                          -- human readable summary
+    sunrise         TEXT,                          -- HH:MM local
+    sunset          TEXT,                          -- HH:MM local
+    daylight_hours  REAL,
+    created_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+);
+
+CREATE INDEX idx_daily_weather_date ON daily_weather(date);
+
+-- ============================================================
 -- WELLNESS (synced from Intervals.icu)
 -- ============================================================
 CREATE TABLE wellness (
@@ -163,6 +216,8 @@ CREATE TABLE checkins (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     date            TEXT NOT NULL,                  -- ISO date
     type            TEXT NOT NULL CHECK (type IN ('morning', 'evening', 'weekend', 'weekly')),
+    completed       INTEGER NOT NULL DEFAULT 0,    -- boolean: fully submitted
+    completion_pct  REAL NOT NULL DEFAULT 0.0,     -- 0.0-100.0: partial completion for dashboard
 
     -- Morning fields
     sleep_quality   INTEGER CHECK (sleep_quality BETWEEN 1 AND 10),
@@ -268,7 +323,7 @@ CREATE TABLE training_plan (
     target_duration_s REAL,                         -- planned duration in seconds
     target_intensity TEXT,                          -- zone or description: 'Z2', 'threshold', '10k pace'
     key_objective   TEXT,                           -- one sentence
-    is_key_session  INTEGER DEFAULT 0,             -- boolean
+    is_key_session  INTEGER DEFAULT 0,             -- boolean: this is THE priority session for the week
     is_rest_day     INTEGER DEFAULT 0,             -- boolean
     completed       INTEGER DEFAULT 0,             -- boolean
     actual_activity_id INTEGER REFERENCES activities(id),
@@ -326,13 +381,18 @@ CREATE TABLE coach_notebook (
     evidence        TEXT,                           -- supporting data points
     confidence      TEXT DEFAULT 'medium' CHECK (confidence IN ('low', 'medium', 'high')),
     active          INTEGER DEFAULT 1,             -- boolean: still relevant?
-    source_conversation_id INTEGER REFERENCES conversations(id),
+    source_type     TEXT NOT NULL DEFAULT 'conversation'
+                    CHECK (source_type IN ('conversation', 'checkin', 'activity', 'system')),
+    source_conversation_id INTEGER REFERENCES conversations(id), -- nullable: only set when source_type='conversation'
+    source_checkin_id      INTEGER REFERENCES checkins(id),      -- nullable: only set when source_type='checkin'
+    source_activity_id     INTEGER REFERENCES activities(id),    -- nullable: only set when source_type='activity'
     created_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
     updated_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
 CREATE INDEX idx_notebook_category ON coach_notebook(category);
 CREATE INDEX idx_notebook_active ON coach_notebook(active);
+CREATE INDEX idx_notebook_source_type ON coach_notebook(source_type);
 
 -- ============================================================
 -- WORK LOG (derived from check-ins, queryable separately)
@@ -368,3 +428,103 @@ CREATE TABLE reminder_config (
     created_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
     updated_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
+
+-- ============================================================
+-- CONTEXT PRIORITY SYSTEM
+-- ============================================================
+-- Defines the tiered context window strategy for Claude API calls.
+-- When token budget is tight, items are included in priority order.
+-- Tier 1 (ALWAYS included, never dropped):
+--   - athlete_profile
+--   - coach_notebook (active entries)
+--   - injuries (active)
+--   - current training_phase
+--   - current week training_plan
+--   - races (upcoming)
+-- Tier 2 (included when budget allows, trimmed first):
+--   - recent check-ins (last 14 days)
+--   - recent activities with weather (last 14 days)
+--   - wellness/CTL/ATL/TSB (last 14 days)
+--   - work_log trends (last 14 days)
+--   - personal_records
+--   - daily_weather (last 7 days)
+-- Tier 3 (first to drop under pressure):
+--   - conversation history (oldest messages dropped first)
+--
+-- This table stores per-block token budgets and priority weights
+-- so the context builder can be tuned without code changes.
+CREATE TABLE context_priority (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    block_name      TEXT NOT NULL UNIQUE,           -- e.g. 'athlete_profile', 'coach_notebook', 'conversation_history'
+    tier            INTEGER NOT NULL CHECK (tier BETWEEN 1 AND 3), -- 1=always, 2=preferred, 3=droppable
+    priority_order  INTEGER NOT NULL,              -- within tier, lower = higher priority
+    max_tokens      INTEGER,                       -- soft cap for this block (NULL = no cap)
+    enabled         INTEGER NOT NULL DEFAULT 1,    -- boolean
+    description     TEXT
+);
+
+-- Seed the priority configuration
+INSERT INTO context_priority (block_name, tier, priority_order, max_tokens, description) VALUES
+    ('athlete_profile',       1, 1, NULL,  'Full athlete profile from onboarding — always included'),
+    ('coach_notebook',        1, 2, 2000,  'Active coach observations and patterns — always included'),
+    ('active_injuries',       1, 3, 500,   'Currently active/monitoring injuries — always included'),
+    ('training_phase',        1, 4, 300,   'Current training phase and sport focus — always included'),
+    ('current_week_plan',     1, 5, 1500,  'This week''s training plan — always included'),
+    ('race_calendar',         1, 6, 500,   'Upcoming races with weeks-to-race — always included'),
+    ('recent_checkins',       2, 1, 3000,  'Check-in responses from last 14 days'),
+    ('recent_activities',     2, 2, 4000,  'Activities with weather context from last 14 days'),
+    ('wellness_trends',       2, 3, 1000,  'CTL/ATL/TSB and wellness from last 14 days'),
+    ('work_stress_trends',    2, 4, 800,   'Work log and stress trends from last 14 days'),
+    ('personal_records',      2, 5, 500,   'All personal records and benchmarks'),
+    ('daily_weather',         2, 6, 400,   'Daily weather from last 7 days'),
+    ('conversation_history',  3, 1, 8000,  'Prior conversation messages — oldest dropped first');
+
+-- ============================================================
+-- VIEWS — Planned vs Actual Hours
+-- ============================================================
+-- Weekly planned hours from training plan
+CREATE VIEW v_weekly_planned_hours AS
+SELECT
+    tp.week_start,
+    SUM(tp.target_duration_s) / 3600.0 AS planned_hours,
+    COUNT(CASE WHEN tp.is_key_session = 1 THEN 1 END) AS planned_key_sessions,
+    COUNT(CASE WHEN tp.is_rest_day = 0 THEN 1 END) AS planned_training_days
+FROM training_plan tp
+WHERE tp.is_rest_day = 0
+GROUP BY tp.week_start;
+
+-- Weekly actual hours from activities
+CREATE VIEW v_weekly_actual_hours AS
+SELECT
+    -- Derive week_start (Monday) from activity start_time
+    date(a.start_time, 'weekday 1', '-7 days') AS week_start,
+    SUM(a.duration_s) / 3600.0 AS actual_hours,
+    COUNT(*) AS total_sessions,
+    COUNT(CASE WHEN ks.id IS NOT NULL THEN 1 END) AS completed_key_sessions,
+    SUM(CASE WHEN a.sport = 'Run' THEN a.duration_s ELSE 0 END) / 3600.0 AS run_hours,
+    SUM(CASE WHEN a.sport = 'Ride' THEN a.duration_s ELSE 0 END) / 3600.0 AS ride_hours,
+    SUM(CASE WHEN a.sport NOT IN ('Run', 'Ride') THEN a.duration_s ELSE 0 END) / 3600.0 AS other_hours
+FROM activities a
+LEFT JOIN key_sessions ks ON ks.activity_id = a.id
+GROUP BY date(a.start_time, 'weekday 1', '-7 days');
+
+-- Combined planned vs actual per week (the analytics chart query)
+CREATE VIEW v_planned_vs_actual AS
+SELECT
+    COALESCE(p.week_start, a.week_start) AS week_start,
+    COALESCE(p.planned_hours, 0) AS planned_hours,
+    COALESCE(a.actual_hours, 0) AS actual_hours,
+    COALESCE(a.actual_hours, 0) - COALESCE(p.planned_hours, 0) AS delta_hours,
+    CASE
+        WHEN COALESCE(p.planned_hours, 0) > 0
+        THEN ROUND(COALESCE(a.actual_hours, 0) / p.planned_hours * 100, 1)
+        ELSE NULL
+    END AS completion_pct,
+    COALESCE(p.planned_key_sessions, 0) AS planned_key_sessions,
+    COALESCE(a.completed_key_sessions, 0) AS completed_key_sessions,
+    COALESCE(a.run_hours, 0) AS run_hours,
+    COALESCE(a.ride_hours, 0) AS ride_hours,
+    COALESCE(a.other_hours, 0) AS other_hours
+FROM v_weekly_planned_hours p
+FULL OUTER JOIN v_weekly_actual_hours a ON p.week_start = a.week_start
+ORDER BY COALESCE(p.week_start, a.week_start);
