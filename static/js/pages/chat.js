@@ -17,10 +17,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // Auto-resize textarea
+    // Auto-resize textarea: grow with content up to 120px, then scroll
     input.addEventListener('input', () => {
         input.style.height = 'auto';
-        input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+        const maxH = 120;
+        const newH = Math.min(input.scrollHeight, maxH);
+        input.style.height = newH + 'px';
+        input.style.overflowY = input.scrollHeight > maxH ? 'auto' : 'hidden';
     });
 
     // Load most recent conversation or start new

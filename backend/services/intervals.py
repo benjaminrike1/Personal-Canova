@@ -121,6 +121,9 @@ class IntervalsClient:
                 if isinstance(gear_raw, dict):
                     gear_name = gear_raw.get("name")
 
+                # Extract power meter source (e.g. "Stryd", "Stages", etc.)
+                power_source = act.get("powerMeter") or act.get("power_meter")
+
                 # Map Intervals.icu fields -> our DB columns
                 db.execute(
                     """INSERT INTO activities (
@@ -140,7 +143,7 @@ class IntervalsClient:
                         interval_summary,
                         is_indoor, is_race, gear_name,
                         threshold_pace, lthr, resting_hr, weight_kg,
-                        compliance, source, strava_id
+                        power_source, compliance, source, strava_id
                     ) VALUES (
                         ?, ?, ?, ?, ?,
                         ?, ?,
@@ -158,7 +161,7 @@ class IntervalsClient:
                         ?,
                         ?, ?, ?,
                         ?, ?, ?, ?,
-                        ?, ?, ?
+                        ?, ?, ?, ?
                     ) ON CONFLICT(intervals_id) DO UPDATE SET
                         name=excluded.name,
                         training_load=excluded.training_load,
@@ -170,7 +173,8 @@ class IntervalsClient:
                         feel=excluded.feel,
                         description=excluded.description,
                         compliance=excluded.compliance,
-                        interval_summary=excluded.interval_summary
+                        interval_summary=excluded.interval_summary,
+                        power_source=excluded.power_source
                     """,
                     (
                         act_id,
@@ -226,6 +230,7 @@ class IntervalsClient:
                         act.get("lthr"),
                         act.get("icu_resting_hr"),
                         act.get("icu_weight"),
+                        power_source,
                         act.get("compliance"),
                         act.get("source"),
                         str(act["strava_id"]) if act.get("strava_id") else None,

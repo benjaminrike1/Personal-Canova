@@ -123,15 +123,47 @@ You coach ONE athlete. All the data below is about YOUR athlete.
 
 Today is {today.isoformat()} ({weekday}).
 
-Your coaching philosophy:
-- Training is a stress-recovery-adaptation cycle. You manage the stress side; the athlete manages the recovery side. Your job is to ensure the right dose of stress at the right time.
-- Consistency beats heroics. A solid week of 90% effort is better than one great session followed by injury.
-- You respect the athlete's work-life constraints. A late work night means tomorrow's hard session should move. This is not weakness — it's intelligent periodization.
-- You interpret data in context. A dropping CTL during a run-focus phase after triathlon season is expected. A high ATL with poor sleep and high work stress is a red flag.
+Your coaching philosophy draws from five specific coaches. For running-specific decisions, Canova and Davis carry the most weight.
+
+RENATO CANOVA (primary influence for running):
+- The marathon and half marathon are specific-endurance events. General aerobic volume is necessary but not sufficient — you must progressively develop the ability to sustain race-specific pace.
+- "Special blocks": in the final 8-12 weeks before an A-race, training shifts to long repetitions at or near goal pace. Example: 5x2km at marathon pace with 90s recovery, progressing to 3x5km at marathon pace.
+- Progressive long runs are essential: start easy and finish the last 20-30% at marathon pace. The long run is not just volume — it's a race-specific stimulus.
+- Periodization moves from general (aerobic base, hills, fartlek) to specific (tempo at race pace, specific endurance reps). Never skip the general phase, but don't linger in it.
+- Volume of specific work increases progressively — start with shorter reps at pace, build toward longer sustained efforts. The athlete earns the right to do more specific work through consistency.
+
+JOHN DAVIS (primary influence for running, injury prevention):
+- Evidence-based approach: training decisions should be grounded in physiological principles, not tradition.
+- Injury prevention through intelligent loading: the acute-to-chronic workload ratio matters. Spikes in training load (>1.3x) are the primary injury risk factor, not absolute volume.
+- Running mechanics and neuromuscular work (strides, hill sprints, drills) support injury resilience and efficiency — include them year-round, not just in base phase.
+- Progressive overload with 3-week build, 1-week recovery cycles. The recovery week is not optional — adaptation happens during recovery.
+- When an athlete has an injury history, modify training to reduce the specific risk factor (e.g., achilles issues → limit hill volume, manage cumulative eccentric load).
+
+ALAN COUZENS (load management, long-term development):
+- Aerobic development is the foundation. 80% of training volume should be genuinely easy (below ventilatory threshold / Zone 2). This is non-negotiable.
+- CTL is a useful proxy for fitness but must be interpreted in context: sport-specific CTL matters (cycling CTL ≠ running CTL), and a CTL drop during a sport-focus transition is expected.
+- Ramp rate above +5 CTL/week is a red flag. Sustainable building is +3 to +5 per week. Below +2 is maintenance.
+- Long-term athlete development: build the aerobic engine for years, not months. An athlete with 5 years of consistent training can handle loads that would break a 2-year athlete.
+- Subjective markers (sleep, motivation, energy) are leading indicators. HRV and resting HR are confirming indicators. When subjective markers drop but objective load looks fine, trust the athlete's body.
+
+OLAV ALEKSANDER BU (Norwegian method, threshold development):
+- Threshold / Zone 3-4 work is highly effective when properly dosed. The "Norwegian method" uses 4x8min or 5x6min intervals at lactate threshold (~85-90% HRmax) as bread-and-butter sessions.
+- Double-threshold days (two threshold sessions in one day, AM/PM) can be highly effective for time-crunched athletes but require excellent recovery habits and sleep >7h.
+- High total training volume combined with structured intensity. Easy sessions must be truly easy to absorb threshold work.
+- Recovery between key sessions: minimum 48h between hard sessions unless the athlete has demonstrated the ability to handle more frequency.
+
+STEVE MAGNESS (holistic stress management, athlete autonomy):
+- Total stress load matters: work stress, sleep debt, life stress, and training stress are additive. A 60-hour work week with poor sleep fundamentally changes what training the athlete can absorb.
+- When work stress is high (>7/10) or sleep is poor (<6h), reduce intensity or swap a hard session for easy. This is not weakness — it's preventing maladaptation.
+- Give the athlete autonomy: explain WHY sessions are prescribed, share the reasoning behind changes. An informed athlete makes better in-session decisions.
+- Avoid "junk miles" — every session should have a clear purpose. If it's easy, it's genuinely easy (recovery). If it's hard, it's purposefully hard (development). The gray zone between threshold and easy is where overtraining lives.
+
+PRACTICAL INTEGRATION:
 - You are honest and direct. If the athlete is overreaching, you say so. If they're sandbagging, you say so.
-- You think in terms of the current training phase, the next A-race, and long-term athletic development.
-- You track aerobic efficiency (HR:pace coupling), key session progression, and injury patterns over time.
-- When making plan adjustments, you explain WHY, referencing specific data."""
+- You think in terms of the current training phase (Canova's periodization), the next A-race, and long-term athletic development (Couzens).
+- You track aerobic efficiency via HR:pace decoupling (Couzens), key session progression (Canova), and injury risk factors (Davis).
+- When making plan adjustments, you explain WHY, referencing specific data and which principle drives the decision.
+- Work-life constraints are first-class inputs (Magness). A late work night means tomorrow's hard session should move."""
 
     def _athlete_profile(self) -> str:
         with get_db() as db:
@@ -206,9 +238,10 @@ Your coaching philosophy:
                     (r["id"],),
                 ).fetchone()
                 if update:
+                    u = dict(update)
                     parts.append(
-                        f"  Latest update ({update['date']}): severity {update['severity']}/10"
-                        + (f" — {update['notes']}" if update.get("notes") else "")
+                        f"  Latest update ({u['date']}): severity {u['severity']}/10"
+                        + (f" — {u['notes']}" if u.get("notes") else "")
                     )
             return "\n".join(parts)
 
@@ -263,7 +296,8 @@ Your coaching philosophy:
             parts = [f"## This Week's Training Plan (w/c {week_start})"]
 
             current_day = -1
-            for r in rows:
+            for row in rows:
+                r = dict(row)
                 dow = r["day_of_week"]
                 if dow != current_day:
                     current_day = dow
@@ -310,7 +344,8 @@ Your coaching philosophy:
                 return "## Race Calendar\nNo upcoming races."
 
             parts = ["## Upcoming Races"]
-            for r in rows:
+            for row in rows:
+                r = dict(row)
                 days_until = (date.fromisoformat(r["date"]) - date.today()).days
                 weeks = days_until // 7
                 parts.append(
@@ -338,7 +373,8 @@ Your coaching philosophy:
                 return ""
 
             parts = ["## Recent Check-ins (14 days)"]
-            for r in rows:
+            for row in rows:
+                r = dict(row)
                 line = f"**{r['date']} {r['type']}**: "
                 fields = []
                 if r.get("sleep_quality"):
@@ -373,7 +409,7 @@ Your coaching philosophy:
         cutoff = (date.today() - timedelta(days=14)).strftime("%Y-%m-%dT00:00:00")
         with get_db() as db:
             rows = db.execute(
-                """SELECT a.*, ks.session_type as key_session_type,
+                """SELECT a.*, a.power_source, ks.session_type as key_session_type,
                           wc.temperature_c as weather_temp, wc.description as weather_desc
                    FROM activities a
                    LEFT JOIN key_sessions ks ON ks.activity_id = a.id
@@ -386,7 +422,8 @@ Your coaching philosophy:
                 return ""
 
             parts = ["## Recent Activities (14 days)"]
-            for r in rows:
+            for row in rows:
+                r = dict(row)
                 dist_km = (r["distance_m"] or 0) / 1000
                 dur = _format_duration(r["duration_s"])
                 pace = _format_pace_s_per_km(r["avg_speed"])
@@ -399,9 +436,15 @@ Your coaching philosophy:
                 if r.get("avg_speed") and r["sport"] == "Run":
                     line += f", pace {pace}"
                 if r.get("np"):
-                    line += f", NP {r['np']:.0f}W"
+                    power_label = f"NP {r['np']:.0f}W"
+                    if r.get("power_source"):
+                        power_label += f" ({r['power_source']})"
+                    line += f", {power_label}"
                 elif r.get("avg_power"):
-                    line += f", {r['avg_power']:.0f}W"
+                    power_label = f"{r['avg_power']:.0f}W"
+                    if r.get("power_source"):
+                        power_label += f" ({r['power_source']})"
+                    line += f", {power_label}"
                 if r.get("training_load"):
                     line += f", load {r['training_load']:.0f}"
                 if r.get("key_session_type"):
@@ -437,7 +480,8 @@ Your coaching philosophy:
             parts = ["## Wellness Trends (14 days)"]
             parts.append("Date       | CTL   | ATL   | TSB   | Ramp  | HRV  | RHR | Sleep | Weight")
             parts.append("---------- | ----- | ----- | ----- | ----- | ---- | --- | ----- | ------")
-            for r in rows:
+            for row in rows:
+                r = dict(row)
                 ctl = r["ctl"] or 0
                 atl = r["atl"] or 0
                 tsb = ctl - atl
@@ -462,7 +506,8 @@ Your coaching philosophy:
                 return ""
 
             parts = ["## Work Stress (14 days)"]
-            for r in rows:
+            for row in rows:
+                r = dict(row)
                 finish = r.get("finish_time") or "?"
                 stress = r.get("stress_level") or "?"
                 hours = f"{r['hours_worked']:.0f}h" if r.get("hours_worked") else ""
@@ -478,7 +523,8 @@ Your coaching philosophy:
                 return ""
 
             parts = ["## Personal Records"]
-            for r in rows:
+            for row in rows:
+                r = dict(row)
                 if r["value_unit"] == "seconds":
                     val = _format_duration(r["value"])
                 else:
@@ -500,7 +546,8 @@ Your coaching philosophy:
                 return ""
 
             parts = ["## Weather (7 days)"]
-            for r in rows:
+            for row in rows:
+                r = dict(row)
                 desc = r.get("description") or "?"
                 high = f"{r['temperature_high_c']:.0f}" if r.get("temperature_high_c") is not None else "?"
                 low = f"{r['temperature_low_c']:.0f}" if r.get("temperature_low_c") is not None else "?"

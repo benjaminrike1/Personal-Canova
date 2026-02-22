@@ -304,6 +304,8 @@ input[type="range"] {
 .chat-input-row .form-textarea {
     min-height: 44px;
     max-height: 120px;
+    overflow-y: hidden;
+    resize: none;
 }
 
 /* Tables */

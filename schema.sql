@@ -9,7 +9,7 @@ PRAGMA foreign_keys = ON;
 -- ============================================================
 -- ATHLETE PROFILE (single row — one athlete app)
 -- ============================================================
-CREATE TABLE athlete_profile (
+CREATE TABLE IF NOT EXISTS athlete_profile (
     id              INTEGER PRIMARY KEY DEFAULT 1 CHECK (id = 1),
     name            TEXT NOT NULL,
     date_of_birth   TEXT,                          -- ISO date
@@ -37,7 +37,7 @@ CREATE TABLE athlete_profile (
 -- ============================================================
 -- PERSONAL RECORDS & BENCHMARKS
 -- ============================================================
-CREATE TABLE personal_records (
+CREATE TABLE IF NOT EXISTS personal_records (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     discipline      TEXT NOT NULL,                 -- 'running' / 'cycling'
     event           TEXT NOT NULL,                 -- '5k', '10k', 'half_marathon', 'marathon', 'ftp', custom
@@ -51,13 +51,13 @@ CREATE TABLE personal_records (
     updated_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
-CREATE INDEX idx_pr_discipline ON personal_records(discipline);
-CREATE INDEX idx_pr_event ON personal_records(event);
+CREATE INDEX IF NOT EXISTS idx_pr_discipline ON personal_records(discipline);
+CREATE INDEX IF NOT EXISTS idx_pr_event ON personal_records(event);
 
 -- ============================================================
 -- RACE CALENDAR
 -- ============================================================
-CREATE TABLE races (
+CREATE TABLE IF NOT EXISTS races (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     name            TEXT NOT NULL,
     date            TEXT NOT NULL,                 -- ISO date
@@ -75,8 +75,8 @@ CREATE TABLE races (
     updated_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
-CREATE INDEX idx_races_date ON races(date);
-CREATE INDEX idx_races_priority ON races(priority);
+CREATE INDEX IF NOT EXISTS idx_races_date ON races(date);
+CREATE INDEX IF NOT EXISTS idx_races_priority ON races(priority);
 
 -- ============================================================
 -- TRAINING PHASES
@@ -85,7 +85,7 @@ CREATE INDEX idx_races_priority ON races(priority);
 -- Critical for interpreting CTL correctly when sport focus shifts —
 -- a dropping CTL during a run-focus block after a triathlon period
 -- is expected and should not trigger concern.
-CREATE TABLE training_phases (
+CREATE TABLE IF NOT EXISTS training_phases (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     name            TEXT,                          -- e.g. "Marathon base build", "Tri season"
     start_date      TEXT NOT NULL,                 -- ISO date
@@ -98,12 +98,12 @@ CREATE TABLE training_phases (
     updated_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
-CREATE INDEX idx_phases_dates ON training_phases(start_date, end_date);
+CREATE INDEX IF NOT EXISTS idx_phases_dates ON training_phases(start_date, end_date);
 
 -- ============================================================
 -- ACTIVITIES (synced from Intervals.icu)
 -- ============================================================
-CREATE TABLE activities (
+CREATE TABLE IF NOT EXISTS activities (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     intervals_id    TEXT UNIQUE,                   -- Intervals.icu activity ID
     sport           TEXT NOT NULL DEFAULT 'Other',  -- 'Run', 'Ride', 'Swim', etc.
@@ -158,6 +158,7 @@ CREATE TABLE activities (
     lthr            REAL,                          -- lactate threshold HR
     resting_hr      REAL,                          -- resting HR on that day
     weight_kg       REAL,                          -- weight on that day
+    power_source    TEXT,                          -- 'stryd', 'garmin_rd_pod', 'stages', 'power2max', etc. from Intervals.icu powerMeter field
     compliance      REAL,                          -- planned vs actual compliance
     source          TEXT DEFAULT 'intervals',      -- 'intervals' / 'manual'
     strava_id       TEXT,
@@ -165,14 +166,14 @@ CREATE TABLE activities (
     created_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
-CREATE INDEX idx_activities_sport ON activities(sport);
-CREATE INDEX idx_activities_start ON activities(start_time);
-CREATE INDEX idx_activities_intervals_id ON activities(intervals_id);
+CREATE INDEX IF NOT EXISTS idx_activities_sport ON activities(sport);
+CREATE INDEX IF NOT EXISTS idx_activities_start ON activities(start_time);
+CREATE INDEX IF NOT EXISTS idx_activities_intervals_id ON activities(intervals_id);
 
 -- ============================================================
 -- WEATHER CACHE (per activity)
 -- ============================================================
-CREATE TABLE weather_cache (
+CREATE TABLE IF NOT EXISTS weather_cache (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     activity_id     INTEGER REFERENCES activities(id) ON DELETE CASCADE,
     latitude        REAL NOT NULL,
@@ -191,7 +192,7 @@ CREATE TABLE weather_cache (
     UNIQUE(activity_id)
 );
 
-CREATE INDEX idx_weather_activity ON weather_cache(activity_id);
+CREATE INDEX IF NOT EXISTS idx_weather_activity ON weather_cache(activity_id);
 
 -- ============================================================
 -- DAILY WEATHER (home location, every day including rest days)
@@ -199,7 +200,7 @@ CREATE INDEX idx_weather_activity ON weather_cache(activity_id);
 -- Uses athlete_profile.location_lat/lon. Ensures rest days and
 -- easy days still have weather context so the coach can interpret
 -- fatigue and subjective feel correctly.
-CREATE TABLE daily_weather (
+CREATE TABLE IF NOT EXISTS daily_weather (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     date            TEXT NOT NULL UNIQUE,           -- ISO date
     latitude        REAL NOT NULL,
@@ -221,12 +222,12 @@ CREATE TABLE daily_weather (
     created_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
-CREATE INDEX idx_daily_weather_date ON daily_weather(date);
+CREATE INDEX IF NOT EXISTS idx_daily_weather_date ON daily_weather(date);
 
 -- ============================================================
 -- WELLNESS (synced from Intervals.icu)
 -- ============================================================
-CREATE TABLE wellness (
+CREATE TABLE IF NOT EXISTS wellness (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     date            TEXT NOT NULL UNIQUE,           -- ISO date
     ctl             REAL,                          -- chronic training load
@@ -254,12 +255,12 @@ CREATE TABLE wellness (
     created_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
-CREATE INDEX idx_wellness_date ON wellness(date);
+CREATE INDEX IF NOT EXISTS idx_wellness_date ON wellness(date);
 
 -- ============================================================
 -- CHECK-INS (morning / evening / weekend / weekly)
 -- ============================================================
-CREATE TABLE checkins (
+CREATE TABLE IF NOT EXISTS checkins (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     date            TEXT NOT NULL,                  -- ISO date
     type            TEXT NOT NULL CHECK (type IN ('morning', 'evening', 'weekend', 'weekly')),
@@ -295,11 +296,11 @@ CREATE TABLE checkins (
     created_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
-CREATE INDEX idx_checkins_date ON checkins(date);
-CREATE INDEX idx_checkins_type ON checkins(type, date);
+CREATE INDEX IF NOT EXISTS idx_checkins_date ON checkins(date);
+CREATE INDEX IF NOT EXISTS idx_checkins_type ON checkins(type, date);
 
 -- Per-session RPE within a check-in (supports two-a-days)
-CREATE TABLE session_checkins (
+CREATE TABLE IF NOT EXISTS session_checkins (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     checkin_id      INTEGER NOT NULL REFERENCES checkins(id) ON DELETE CASCADE,
     activity_id     INTEGER REFERENCES activities(id),
@@ -309,12 +310,12 @@ CREATE TABLE session_checkins (
     created_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
-CREATE INDEX idx_session_checkins_checkin ON session_checkins(checkin_id);
+CREATE INDEX IF NOT EXISTS idx_session_checkins_checkin ON session_checkins(checkin_id);
 
 -- ============================================================
 -- INJURY LOG
 -- ============================================================
-CREATE TABLE injuries (
+CREATE TABLE IF NOT EXISTS injuries (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     body_part       TEXT NOT NULL,                  -- e.g. 'right knee', 'left achilles'
     description     TEXT NOT NULL,
@@ -327,11 +328,11 @@ CREATE TABLE injuries (
     updated_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
-CREATE INDEX idx_injuries_status ON injuries(status);
-CREATE INDEX idx_injuries_body_part ON injuries(body_part);
+CREATE INDEX IF NOT EXISTS idx_injuries_status ON injuries(status);
+CREATE INDEX IF NOT EXISTS idx_injuries_body_part ON injuries(body_part);
 
 -- Injury severity history (daily tracking from check-ins)
-CREATE TABLE injury_updates (
+CREATE TABLE IF NOT EXISTS injury_updates (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     injury_id       INTEGER NOT NULL REFERENCES injuries(id) ON DELETE CASCADE,
     date            TEXT NOT NULL,                  -- ISO date
@@ -340,12 +341,12 @@ CREATE TABLE injury_updates (
     created_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
-CREATE INDEX idx_injury_updates_injury ON injury_updates(injury_id, date);
+CREATE INDEX IF NOT EXISTS idx_injury_updates_injury ON injury_updates(injury_id, date);
 
 -- ============================================================
 -- KEY SESSIONS
 -- ============================================================
-CREATE TABLE key_sessions (
+CREATE TABLE IF NOT EXISTS key_sessions (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     activity_id     INTEGER NOT NULL REFERENCES activities(id) ON DELETE CASCADE,
     session_type    TEXT NOT NULL,                  -- 'threshold_run', 'long_run', 'race_specific', 'tempo', 'interval', 'ftp_test', etc.
@@ -355,13 +356,13 @@ CREATE TABLE key_sessions (
     UNIQUE(activity_id)
 );
 
-CREATE INDEX idx_key_sessions_type ON key_sessions(session_type);
-CREATE INDEX idx_key_sessions_activity ON key_sessions(activity_id);
+CREATE INDEX IF NOT EXISTS idx_key_sessions_type ON key_sessions(session_type);
+CREATE INDEX IF NOT EXISTS idx_key_sessions_activity ON key_sessions(activity_id);
 
 -- ============================================================
 -- TRAINING PLAN
 -- ============================================================
-CREATE TABLE training_plan (
+CREATE TABLE IF NOT EXISTS training_plan (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     week_start      TEXT NOT NULL,                  -- ISO date (Monday)
     day_of_week     INTEGER NOT NULL CHECK (day_of_week BETWEEN 0 AND 6), -- 0=Monday
@@ -380,11 +381,11 @@ CREATE TABLE training_plan (
     updated_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
-CREATE INDEX idx_plan_week ON training_plan(week_start);
-CREATE INDEX idx_plan_day ON training_plan(week_start, day_of_week);
+CREATE INDEX IF NOT EXISTS idx_plan_week ON training_plan(week_start);
+CREATE INDEX IF NOT EXISTS idx_plan_day ON training_plan(week_start, day_of_week);
 
 -- Full version history for plan changes
-CREATE TABLE training_plan_versions (
+CREATE TABLE IF NOT EXISTS training_plan_versions (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     plan_entry_id   INTEGER NOT NULL REFERENCES training_plan(id) ON DELETE CASCADE,
     version         INTEGER NOT NULL,
@@ -394,12 +395,12 @@ CREATE TABLE training_plan_versions (
     created_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
-CREATE INDEX idx_plan_versions_entry ON training_plan_versions(plan_entry_id);
+CREATE INDEX IF NOT EXISTS idx_plan_versions_entry ON training_plan_versions(plan_entry_id);
 
 -- ============================================================
 -- COACHING CONVERSATIONS
 -- ============================================================
-CREATE TABLE conversations (
+CREATE TABLE IF NOT EXISTS conversations (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     title           TEXT,                           -- auto-generated or user-set
     conversation_type TEXT DEFAULT 'general',       -- 'general', 'onboarding', 'plan_build', 'race_discussion', 'weekly_review'
@@ -407,7 +408,7 @@ CREATE TABLE conversations (
     updated_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
-CREATE TABLE messages (
+CREATE TABLE IF NOT EXISTS messages (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     conversation_id INTEGER NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
     role            TEXT NOT NULL CHECK (role IN ('user', 'assistant', 'system')),
@@ -416,12 +417,12 @@ CREATE TABLE messages (
     created_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
-CREATE INDEX idx_messages_conversation ON messages(conversation_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_messages_conversation ON messages(conversation_id, created_at);
 
 -- ============================================================
 -- COACH'S NOTEBOOK
 -- ============================================================
-CREATE TABLE coach_notebook (
+CREATE TABLE IF NOT EXISTS coach_notebook (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     category        TEXT NOT NULL,                  -- 'pattern', 'observation', 'preference', 'risk', 'strength'
     content         TEXT NOT NULL,                  -- the observation itself
@@ -437,14 +438,14 @@ CREATE TABLE coach_notebook (
     updated_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
-CREATE INDEX idx_notebook_category ON coach_notebook(category);
-CREATE INDEX idx_notebook_active ON coach_notebook(active);
-CREATE INDEX idx_notebook_source_type ON coach_notebook(source_type);
+CREATE INDEX IF NOT EXISTS idx_notebook_category ON coach_notebook(category);
+CREATE INDEX IF NOT EXISTS idx_notebook_active ON coach_notebook(active);
+CREATE INDEX IF NOT EXISTS idx_notebook_source_type ON coach_notebook(source_type);
 
 -- ============================================================
 -- WORK LOG (derived from check-ins, queryable separately)
 -- ============================================================
-CREATE TABLE work_log (
+CREATE TABLE IF NOT EXISTS work_log (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     date            TEXT NOT NULL UNIQUE,           -- ISO date
     finish_time     TEXT,                           -- HH:MM
@@ -454,12 +455,12 @@ CREATE TABLE work_log (
     created_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
-CREATE INDEX idx_work_log_date ON work_log(date);
+CREATE INDEX IF NOT EXISTS idx_work_log_date ON work_log(date);
 
 -- ============================================================
 -- EMAIL REMINDERS CONFIG
 -- ============================================================
-CREATE TABLE reminder_config (
+CREATE TABLE IF NOT EXISTS reminder_config (
     id              INTEGER PRIMARY KEY DEFAULT 1 CHECK (id = 1),
     email           TEXT,
     weekday_morning_time  TEXT DEFAULT '06:30',
@@ -500,7 +501,7 @@ CREATE TABLE reminder_config (
 --
 -- This table stores per-block token budgets and priority weights
 -- so the context builder can be tuned without code changes.
-CREATE TABLE context_priority (
+CREATE TABLE IF NOT EXISTS context_priority (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     block_name      TEXT NOT NULL UNIQUE,           -- e.g. 'athlete_profile', 'coach_notebook', 'conversation_history'
     tier            INTEGER NOT NULL CHECK (tier BETWEEN 1 AND 3), -- 1=always, 2=preferred, 3=droppable
@@ -511,7 +512,7 @@ CREATE TABLE context_priority (
 );
 
 -- Seed the priority configuration
-INSERT INTO context_priority (block_name, tier, priority_order, max_tokens, description) VALUES
+INSERT OR IGNORE INTO context_priority (block_name, tier, priority_order, max_tokens, description) VALUES
     ('athlete_profile',       1, 1, NULL,  'Full athlete profile from onboarding — always included'),
     ('coach_notebook',        1, 2, 2000,  'Active coach observations and patterns — always included'),
     ('active_injuries',       1, 3, 500,   'Currently active/monitoring injuries — always included'),
@@ -530,7 +531,7 @@ INSERT INTO context_priority (block_name, tier, priority_order, max_tokens, desc
 -- VIEWS — Planned vs Actual Hours
 -- ============================================================
 -- Weekly planned hours from training plan
-CREATE VIEW v_weekly_planned_hours AS
+CREATE VIEW IF NOT EXISTS v_weekly_planned_hours AS
 SELECT
     tp.week_start,
     SUM(tp.target_duration_s) / 3600.0 AS planned_hours,
@@ -541,7 +542,7 @@ WHERE tp.is_rest_day = 0
 GROUP BY tp.week_start;
 
 -- Weekly actual hours from activities
-CREATE VIEW v_weekly_actual_hours AS
+CREATE VIEW IF NOT EXISTS v_weekly_actual_hours AS
 SELECT
     -- Derive week_start (Monday) from activity start_time
     date(a.start_time, 'weekday 1', '-7 days') AS week_start,
@@ -556,7 +557,7 @@ LEFT JOIN key_sessions ks ON ks.activity_id = a.id
 GROUP BY date(a.start_time, 'weekday 1', '-7 days');
 
 -- Combined planned vs actual per week (the analytics chart query)
-CREATE VIEW v_planned_vs_actual AS
+CREATE VIEW IF NOT EXISTS v_planned_vs_actual AS
 SELECT
     COALESCE(p.week_start, a.week_start) AS week_start,
     COALESCE(p.planned_hours, 0) AS planned_hours,
