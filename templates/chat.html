@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Coach — Chat{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="flex-between mb-md">
+        <h1>Coach</h1>
+        <button class="btn btn-secondary btn-sm" id="new-chat">New Chat</button>
+    </div>
+
+    <div class="chat-messages" id="chat-messages">
+        <div class="text-muted" style="text-align:center; padding: 40px 0;">
+            Start a conversation with your coach.
+        </div>
+    </div>
+
+    <div class="chat-input-row">
+        <textarea class="form-textarea" id="chat-input" placeholder="Ask your coach anything..." rows="1"></textarea>
+        <button class="btn btn-primary" id="chat-send">Send</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/pages/chat.js"></script>
+{% endblock %}

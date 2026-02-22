@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Coach — Analytics{% endblock %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+{% endblock %}
+
+{% block content %}
+<div class="flex-between mb-md">
+    <h1>Analytics</h1>
+    <div class="period-toggle" id="period-toggle">
+        <button data-weeks="1">1W</button>
+        <button data-weeks="4" class="active">4W</button>
+        <button data-weeks="12">12W</button>
+        <button data-weeks="52">Season</button>
+    </div>
+</div>
+
+<!-- Sport toggle -->
+<div class="flex gap-sm mb-md">
+    <button class="btn btn-sm btn-primary" data-sport="Run" id="sport-run">Running</button>
+    <button class="btn btn-sm btn-secondary" data-sport="Ride" id="sport-ride">Cycling</button>
+</div>
+
+<!-- Charts -->
+<div class="card">
+    <div class="card-title">Aerobic Efficiency — HR vs Pace/Power</div>
+    <canvas id="chart-aerobic"></canvas>
+</div>
+
+<div class="card">
+    <div class="card-title">Training Load — CTL / ATL / TSB</div>
+    <canvas id="chart-load"></canvas>
+</div>
+
+<div class="card">
+    <div class="card-title">Key Session Progression</div>
+    <canvas id="chart-key-sessions"></canvas>
+</div>
+
+<div class="card">
+    <div class="card-title">Zone Distribution (Weekly)</div>
+    <canvas id="chart-zones"></canvas>
+</div>
+
+<div class="card">
+    <div class="card-title">Planned vs Actual Hours</div>
+    <canvas id="chart-planned-actual"></canvas>
+</div>
+
+<!-- Session comparison -->
+<div class="card">
+    <div class="card-title">Session Comparison</div>
+    <p class="text-muted text-sm mb-md">Select sessions from the activities list to overlay and compare.</p>
+    <canvas id="chart-compare" class="hidden"></canvas>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/pages/analytics.js"></script>
+{% endblock %}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Coach{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <nav class="nav">
+        <a href="/" class="nav-brand">Coach</a>
+        <div class="nav-links">
+            <a href="/" class="nav-link">Dashboard</a>
+            <a href="/chat" class="nav-link">Chat</a>
+            <a href="/plan" class="nav-link">Plan</a>
+            <a href="/races" class="nav-link">Races</a>
+            <a href="/injuries" class="nav-link">Injuries</a>
+            <a href="/analytics" class="nav-link">Analytics</a>
+            <a href="/notebook" class="nav-link">Notebook</a>
+            <a href="/settings" class="nav-link">Settings</a>
+        </div>
+        <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
+    </nav>
+
+    <main class="main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="/static/js/app.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

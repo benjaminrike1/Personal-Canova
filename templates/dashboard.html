@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Coach — Dashboard{% endblock %}
+
+{% block content %}
+<div class="flex-between mb-md">
+    <h1>Dashboard</h1>
+    <a href="/chat" class="btn btn-primary">Chat with Coach</a>
+</div>
+
+<!-- Check-in status -->
+<div class="grid grid-2" id="checkin-status">
+    <div class="card">
+        <div class="card-title">Morning Check-in</div>
+        <div id="morning-status" class="loading">Loading</div>
+    </div>
+    <div class="card">
+        <div class="card-title">Evening Check-in</div>
+        <div id="evening-status" class="loading">Loading</div>
+    </div>
+</div>
+
+<!-- Key metrics -->
+<div class="grid grid-3" id="key-metrics">
+    <div class="card">
+        <div class="card-title">Next A-Race</div>
+        <div id="next-race" class="loading">Loading</div>
+    </div>
+    <div class="card">
+        <div class="card-title">Fitness (CTL / ATL / TSB)</div>
+        <div id="fitness" class="loading">Loading</div>
+    </div>
+    <div class="card">
+        <div class="card-title">Active Injuries</div>
+        <div id="active-injuries" class="loading">Loading</div>
+    </div>
+</div>
+
+<!-- This week's plan -->
+<div class="card">
+    <div class="card-title">This Week's Plan</div>
+    <div class="grid grid-7" id="week-plan">
+        <div class="loading">Loading</div>
+    </div>
+</div>
+
+<!-- Recent activities -->
+<div class="card">
+    <div class="card-title">Recent Activities</div>
+    <div id="recent-activities">
+        <div class="loading">Loading</div>
+    </div>
+</div>
+
+<!-- Trends -->
+<div class="grid grid-2">
+    <div class="card">
+        <div class="card-title">Sleep (7 days)</div>
+        <div id="sleep-trend" class="loading">Loading</div>
+    </div>
+    <div class="card">
+        <div class="card-title">Work Stress (7 days)</div>
+        <div id="stress-trend" class="loading">Loading</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/pages/dashboard.js"></script>
+{% endblock %}

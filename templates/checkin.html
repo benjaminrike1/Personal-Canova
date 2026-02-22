@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Coach — {{ checkin_type|title }} Check-in{% endblock %}
+
+{% block content %}
+<h1 class="mb-md">{{ checkin_type|title }} Check-in</h1>
+
+<form id="checkin-form" class="card">
+    <input type="hidden" name="type" value="{{ checkin_type }}">
+
+    <!-- Morning / Weekend: sleep + energy -->
+    {% if checkin_type in ['morning', 'weekend'] %}
+    <div class="form-group">
+        <label class="form-label">Sleep quality</label>
+        <div class="range-group">
+            <input type="range" id="sleep_quality" name="sleep_quality" min="1" max="10" value="5">
+            <span class="range-value" id="sleep_quality-val">5</span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Hours slept</label>
+        <input type="number" class="form-input" name="hours_slept" step="0.5" min="0" max="14">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Energy level</label>
+        <div class="range-group">
+            <input type="range" id="energy_level" name="energy_level" min="1" max="10" value="5">
+            <span class="range-value" id="energy_level-val">5</span>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Morning only: work + motivation -->
+    {% if checkin_type == 'morning' %}
+    <div class="form-group">
+        <label class="form-label">What time did you finish work yesterday?</label>
+        <input type="time" class="form-input" name="work_finish_time">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Work stress yesterday</label>
+        <div class="range-group">
+            <input type="range" id="work_stress" name="work_stress" min="1" max="10" value="5">
+            <span class="range-value" id="work_stress-val">5</span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Motivation / mental state</label>
+        <div class="range-group">
+            <input type="range" id="motivation" name="motivation" min="1" max="10" value="5">
+            <span class="range-value" id="motivation-val">5</span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Body weight (kg, optional)</label>
+        <input type="number" class="form-input" name="body_weight_kg" step="0.1">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Injury / niggle update</label>
+        <textarea class="form-textarea" name="injury_update" id="injury-update" placeholder="Pre-filled with active injuries..."></textarea>
+    </div>
+    {% endif %}
+
+    <!-- Evening / Weekend: session RPE -->
+    {% if checkin_type in ['evening', 'weekend'] %}
+    <div class="form-group" id="session-rpe-section">
+        <label class="form-label">Session RPE</label>
+        <div id="session-rpe-list">
+            <div class="loading">Loading today's sessions...</div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Evening only -->
+    {% if checkin_type == 'evening' %}
+    <div class="form-group">
+        <label class="form-label">Did you do what you planned?</label>
+        <select class="form-select" name="did_planned">
+            <option value="yes">Yes</option>
+            <option value="partly">Partly</option>
+            <option value="no">No</option>
+        </select>
+    </div>
+    {% endif %}
+
+    <!-- Evening + Weekend: reflection -->
+    {% if checkin_type in ['evening', 'weekend'] %}
+    <div class="form-group">
+        <label class="form-label">Tomorrow's objective (one sentence)</label>
+        <input type="text" class="form-input" name="tomorrow_objective">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">One thing you could have done better today</label>
+        <input type="text" class="form-input" name="improvement">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Alcohol today?</label>
+        <select class="form-select" name="alcohol">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Nutrition quality</label>
+        <select class="form-select" name="nutrition">
+            <option value="good">Good</option>
+            <option value="ok">OK</option>
+            <option value="poor">Poor</option>
+        </select>
+    </div>
+    {% endif %}
+
+    <!-- Weekly -->
+    {% if checkin_type == 'weekly' %}
+    <div class="form-group">
+        <label class="form-label">Hours worked this week (rough estimate)</label>
+        <input type="number" class="form-input" name="hours_worked" step="1">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Three things you could have done better this week</label>
+        <textarea class="form-textarea" name="three_improvements" placeholder="1. &#10;2. &#10;3. "></textarea>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Weekly reflection</label>
+        <textarea class="form-textarea" name="weekly_reflection" rows="4"></textarea>
+    </div>
+    {% endif %}
+
+    <button type="submit" class="btn btn-primary">Submit Check-in</button>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/pages/checkin.js"></script>
+{% endblock %}

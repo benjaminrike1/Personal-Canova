@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Coach — Settings{% endblock %}
+
+{% block content %}
+<h1 class="mb-md">Settings</h1>
+
+<!-- Intervals.icu -->
+<div class="card">
+    <div class="card-title">Intervals.icu Connection</div>
+    <form id="intervals-form">
+        <div class="grid grid-2">
+            <div class="form-group">
+                <label class="form-label">Athlete ID</label>
+                <input type="text" class="form-input" name="intervals_athlete_id" placeholder="i00000">
+            </div>
+            <div class="form-group">
+                <label class="form-label">API Key</label>
+                <input type="password" class="form-input" name="intervals_api_key" placeholder="Your API key">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm mt-sm">Save & Test</button>
+    </form>
+</div>
+
+<!-- Location -->
+<div class="card">
+    <div class="card-title">Home Location (for weather)</div>
+    <form id="location-form">
+        <div class="grid grid-2">
+            <div class="form-group">
+                <label class="form-label">Latitude</label>
+                <input type="number" class="form-input" name="location_lat" step="0.0001">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Longitude</label>
+                <input type="number" class="form-input" name="location_lon" step="0.0001">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm mt-sm">Save</button>
+    </form>
+</div>
+
+<!-- Email reminders -->
+<div class="card">
+    <div class="card-title">Email Reminders</div>
+    <form id="reminder-form">
+        <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" class="form-input" name="email">
+        </div>
+        <div class="grid grid-2">
+            <div class="form-group">
+                <label class="form-label">SMTP Host</label>
+                <input type="text" class="form-input" name="smtp_host" placeholder="smtp.gmail.com">
+            </div>
+            <div class="form-group">
+                <label class="form-label">SMTP Port</label>
+                <input type="number" class="form-input" name="smtp_port" value="587">
+            </div>
+            <div class="form-group">
+                <label class="form-label">SMTP User</label>
+                <input type="text" class="form-input" name="smtp_user">
+            </div>
+            <div class="form-group">
+                <label class="form-label">SMTP Password</label>
+                <input type="password" class="form-input" name="smtp_password">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm mt-sm">Save & Test</button>
+    </form>
+</div>
+
+<!-- Data export -->
+<div class="card">
+    <div class="card-title">Data Export</div>
+    <div class="flex gap-sm">
+        <a href="/api/export/checkins" class="btn btn-secondary btn-sm">Export Check-ins (CSV)</a>
+        <a href="/api/export/activities" class="btn btn-secondary btn-sm">Export Activities (CSV)</a>
+        <a href="/api/export/notebook" class="btn btn-secondary btn-sm">Export Notebook (CSV)</a>
+    </div>
+</div>
+
+<!-- Sync -->
+<div class="card">
+    <div class="card-title">Manual Sync</div>
+    <div class="flex gap-sm">
+        <button class="btn btn-secondary btn-sm" id="sync-activities">Sync Activities</button>
+        <button class="btn btn-secondary btn-sm" id="sync-weather">Sync Weather</button>
+    </div>
+    <div id="sync-status" class="text-muted text-sm mt-sm"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/pages/settings.js"></script>
+{% endblock %}

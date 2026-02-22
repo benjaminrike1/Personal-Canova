@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Coach — Training Plan{% endblock %}
+
+{% block content %}
+<div class="flex-between mb-md">
+    <h1>Training Plan</h1>
+    <div class="flex gap-sm">
+        <button class="btn btn-secondary btn-sm" id="prev-week">&larr; Prev</button>
+        <span id="week-label" class="font-bold"></span>
+        <button class="btn btn-secondary btn-sm" id="next-week">Next &rarr;</button>
+    </div>
+</div>
+
+<!-- Weekly block view Mon-Sun -->
+<div class="grid grid-7" id="plan-grid">
+    <div class="loading">Loading plan...</div>
+</div>
+
+<!-- Weekly summary -->
+<div class="grid grid-3 mt-md" id="week-summary">
+    <div class="card">
+        <div class="card-title">Planned Hours</div>
+        <div id="planned-hours" class="card-value">-</div>
+    </div>
+    <div class="card">
+        <div class="card-title">Actual Hours</div>
+        <div id="actual-hours" class="card-value">-</div>
+    </div>
+    <div class="card">
+        <div class="card-title">Key Sessions</div>
+        <div id="key-sessions-count" class="card-value">-</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/pages/plan.js"></script>
+{% endblock %}

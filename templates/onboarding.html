@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Coach — Welcome{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <h1 class="mb-md">Welcome to Coach</h1>
+    <p class="text-muted mb-md">
+        Let's get you set up. Your coach needs to know who you are before it can do its job.
+        This is a one-time conversation — be honest, be detailed.
+    </p>
+
+    <div class="chat-container" style="height: calc(100vh - 200px);">
+        <div class="chat-messages" id="onboarding-messages"></div>
+        <div class="chat-input-row">
+            <textarea class="form-textarea" id="onboarding-input" placeholder="Type your answer..." rows="1"></textarea>
+            <button class="btn btn-primary" id="onboarding-send">Send</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/pages/onboarding.js"></script>
+{% endblock %}

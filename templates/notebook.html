@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Coach — Coach's Notebook{% endblock %}
+
+{% block content %}
+<h1 class="mb-md">Coach's Notebook</h1>
+<p class="text-muted mb-md">
+    These are observations your coach has recorded about you over time.
+    Patterns, preferences, risks, and strengths — all based on your data.
+</p>
+
+<!-- Filter by category -->
+<div class="flex gap-sm mb-md">
+    <button class="btn btn-sm btn-primary" data-cat="all">All</button>
+    <button class="btn btn-sm btn-secondary" data-cat="pattern">Patterns</button>
+    <button class="btn btn-sm btn-secondary" data-cat="observation">Observations</button>
+    <button class="btn btn-sm btn-secondary" data-cat="risk">Risks</button>
+    <button class="btn btn-sm btn-secondary" data-cat="strength">Strengths</button>
+    <button class="btn btn-sm btn-secondary" data-cat="preference">Preferences</button>
+</div>
+
+<div id="notebook-entries">
+    <div class="loading">Loading notebook...</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/pages/notebook.js"></script>
+{% endblock %}
