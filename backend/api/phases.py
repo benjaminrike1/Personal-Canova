@@ -1,5 +1,6 @@
+import sqlite3
 from datetime import date, datetime, timedelta
-from typing import Optional
+from typing import Literal, Optional
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
@@ -8,13 +9,16 @@ from backend.core.database import get_db, dict_from_row, dicts_from_rows
 
 router = APIRouter()
 
+SportFocus = Literal["run", "bike", "triathlon", "other"]
+PhaseType = Literal["base", "build", "peak", "taper", "recovery"]
+
 
 class PhaseCreate(BaseModel):
     name: Optional[str] = None
     start_date: str
     end_date: Optional[str] = None
-    primary_sport_focus: str  # run, bike, triathlon, other
-    phase_type: str  # base, build, peak, taper, recovery
+    primary_sport_focus: SportFocus
+    phase_type: PhaseType
     target_race_id: Optional[int] = None
     notes: Optional[str] = None
 
@@ -23,8 +27,8 @@ class PhaseUpdate(BaseModel):
     name: Optional[str] = None
     start_date: Optional[str] = None
     end_date: Optional[str] = None
-    primary_sport_focus: Optional[str] = None
-    phase_type: Optional[str] = None
+    primary_sport_focus: Optional[SportFocus] = None
+    phase_type: Optional[PhaseType] = None
     target_race_id: Optional[int] = None
     notes: Optional[str] = None
 
@@ -64,17 +68,20 @@ async def current_phase():
 async def create_phase(phase: PhaseCreate):
     """Create a new training phase."""
     with get_db() as db:
-        cursor = db.execute(
-            """INSERT INTO training_phases
-               (name, start_date, end_date, primary_sport_focus, phase_type,
-                target_race_id, notes)
-               VALUES (?, ?, ?, ?, ?, ?, ?)""",
-            (
-                phase.name, phase.start_date, phase.end_date,
-                phase.primary_sport_focus, phase.phase_type,
-                phase.target_race_id, phase.notes,
-            ),
-        )
+        try:
+            cursor = db.execute(
+                """INSERT INTO training_phases
+                   (name, start_date, end_date, primary_sport_focus, phase_type,
+                    target_race_id, notes)
+                   VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                (
+                    phase.name, phase.start_date, phase.end_date,
+                    phase.primary_sport_focus, phase.phase_type,
+                    phase.target_race_id, phase.notes,
+                ),
+            )
+        except sqlite3.IntegrityError as e:
+            raise HTTPException(status_code=400, detail=str(e))
         row = db.execute(
             "SELECT * FROM training_phases WHERE id = ?", (cursor.lastrowid,)
         ).fetchone()

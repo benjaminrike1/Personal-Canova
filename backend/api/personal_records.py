@@ -1,3 +1,4 @@
+import sqlite3
 from datetime import date, datetime, timedelta
 from typing import Optional
 
@@ -51,15 +52,18 @@ async def list_records(discipline: str | None = None):
 async def create_record(record: RecordCreate):
     """Add a personal record."""
     with get_db() as db:
-        cursor = db.execute(
-            """INSERT INTO personal_records
-               (discipline, event, value, value_unit, date_achieved, source, notes, activity_id)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-            (
-                record.discipline, record.event, record.value, record.value_unit,
-                record.date_achieved, record.source, record.notes, record.activity_id,
-            ),
-        )
+        try:
+            cursor = db.execute(
+                """INSERT INTO personal_records
+                   (discipline, event, value, value_unit, date_achieved, source, notes, activity_id)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+                (
+                    record.discipline, record.event, record.value, record.value_unit,
+                    record.date_achieved, record.source, record.notes, record.activity_id,
+                ),
+            )
+        except sqlite3.IntegrityError as e:
+            raise HTTPException(status_code=400, detail=str(e))
         row = db.execute(
             "SELECT * FROM personal_records WHERE id = ?", (cursor.lastrowid,)
         ).fetchone()
