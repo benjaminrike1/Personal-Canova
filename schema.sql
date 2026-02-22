@@ -106,28 +106,62 @@ CREATE INDEX idx_phases_dates ON training_phases(start_date, end_date);
 CREATE TABLE activities (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     intervals_id    TEXT UNIQUE,                   -- Intervals.icu activity ID
-    sport           TEXT NOT NULL,                 -- 'Run', 'Ride', 'Swim', etc.
+    sport           TEXT NOT NULL DEFAULT 'Other',  -- 'Run', 'Ride', 'Swim', etc.
+    sub_type        TEXT,                          -- Intervals.icu sub-type
     name            TEXT,
-    start_time      TEXT NOT NULL,                 -- ISO 8601
+    description     TEXT,
+    start_time      TEXT NOT NULL DEFAULT '',      -- ISO 8601 local
+    start_time_utc  TEXT,                          -- ISO 8601 UTC
     duration_s      REAL,                          -- moving time in seconds
     elapsed_s       REAL,                          -- elapsed time
+    recording_s     REAL,                          -- recording time
     distance_m      REAL,
     avg_hr          REAL,
     max_hr          REAL,
-    avg_pace_s_km   REAL,                          -- seconds per km (running)
-    avg_power       REAL,                          -- watts (cycling or Stryd)
-    np              REAL,                          -- normalized power
-    tss             REAL,                          -- training stress score
-    intensity_factor REAL,
+    avg_speed       REAL,                          -- m/s
+    max_speed       REAL,                          -- m/s
+    avg_pace        REAL,                          -- s/m from Intervals
+    gap             REAL,                          -- grade adjusted pace s/m
+    avg_power       REAL,                          -- average watts
+    np              REAL,                          -- normalized / weighted avg watts
     avg_cadence     REAL,
     elevation_gain  REAL,                          -- meters
+    elevation_loss  REAL,                          -- meters
     calories        REAL,
     training_load   REAL,                          -- Intervals.icu training load
-    has_stryd_power INTEGER DEFAULT 0,             -- boolean: Stryd data available
-    intervals_data  TEXT,                          -- JSON: raw intervals/laps from API
-    zone_time       TEXT,                          -- JSON: time-in-zone breakdown
+    atl             REAL,                          -- acute training load at time of activity
+    ctl             REAL,                          -- chronic training load at time of activity
+    ftp             REAL,                          -- FTP used for this activity
+    intensity       REAL,                          -- intensity factor from Intervals
+    efficiency_factor REAL,
+    variability_index REAL,
+    decoupling      REAL,                          -- aerobic decoupling %
+    trimp           REAL,
+    polarization_index REAL,
+    perceived_exertion REAL,                       -- Garmin perceived exertion
+    rpe             REAL,                          -- Intervals.icu RPE
+    session_rpe     REAL,                          -- session RPE
+    feel            REAL,                          -- how it felt 1-5
+    avg_temp_c      REAL,                          -- device temp sensor
+    avg_weather_temp_c REAL,                       -- from weather overlay
+    hr_zone_times   TEXT,                          -- JSON: seconds per HR zone
+    pace_zone_times TEXT,                          -- JSON: seconds per pace zone
+    power_zone_times TEXT,                         -- JSON: seconds per power zone
+    hr_zones        TEXT,                          -- JSON: zone boundaries used
+    pace_zones      TEXT,                          -- JSON: zone boundaries used
+    power_zones     TEXT,                          -- JSON: zone boundaries used
+    interval_summary TEXT,                         -- JSON: interval descriptions
+    is_indoor       INTEGER DEFAULT 0,
+    is_race         INTEGER DEFAULT 0,
+    gear_name       TEXT,
+    threshold_pace  REAL,                          -- threshold pace s/m
+    lthr            REAL,                          -- lactate threshold HR
+    resting_hr      REAL,                          -- resting HR on that day
+    weight_kg       REAL,                          -- weight on that day
+    compliance      REAL,                          -- planned vs actual compliance
     source          TEXT DEFAULT 'intervals',      -- 'intervals' / 'manual'
-    synced_at       TEXT,
+    strava_id       TEXT,
+    synced_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
     created_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
@@ -197,13 +231,26 @@ CREATE TABLE wellness (
     date            TEXT NOT NULL UNIQUE,           -- ISO date
     ctl             REAL,                          -- chronic training load
     atl             REAL,                          -- acute training load
-    tsb             REAL,                          -- training stress balance
-    resting_hr      REAL,
-    hrv             REAL,
+    ramp_rate       REAL,                          -- CTL ramp rate
     weight_kg       REAL,
-    sleep_quality   REAL,                          -- from Intervals.icu if available
-    source          TEXT DEFAULT 'intervals',
-    synced_at       TEXT,
+    resting_hr      REAL,
+    hrv             REAL,                          -- HRV (rMSSD)
+    hrv_sdnn        REAL,                          -- HRV SDNN
+    sleep_seconds   REAL,                          -- total sleep duration
+    sleep_score     REAL,                          -- Garmin sleep score
+    sleep_quality   REAL,                          -- 1-5 scale
+    avg_sleeping_hr REAL,                          -- average HR during sleep
+    soreness        REAL,                          -- 1-10
+    fatigue         REAL,                          -- 1-10
+    stress          REAL,                          -- 1-10
+    mood            REAL,                          -- 1-10
+    motivation      REAL,                          -- 1-10
+    spo2            REAL,                          -- blood oxygen %
+    readiness       REAL,                          -- readiness score
+    vo2max          REAL,                          -- estimated VO2max
+    steps           INTEGER,                       -- daily step count
+    respiration     REAL,                          -- respiration rate
+    synced_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
     created_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
@@ -498,12 +545,12 @@ CREATE VIEW v_weekly_actual_hours AS
 SELECT
     -- Derive week_start (Monday) from activity start_time
     date(a.start_time, 'weekday 1', '-7 days') AS week_start,
-    SUM(a.duration_s) / 3600.0 AS actual_hours,
+    SUM(COALESCE(a.duration_s, a.elapsed_s, 0)) / 3600.0 AS actual_hours,
     COUNT(*) AS total_sessions,
     COUNT(CASE WHEN ks.id IS NOT NULL THEN 1 END) AS completed_key_sessions,
-    SUM(CASE WHEN a.sport = 'Run' THEN a.duration_s ELSE 0 END) / 3600.0 AS run_hours,
-    SUM(CASE WHEN a.sport = 'Ride' THEN a.duration_s ELSE 0 END) / 3600.0 AS ride_hours,
-    SUM(CASE WHEN a.sport NOT IN ('Run', 'Ride') THEN a.duration_s ELSE 0 END) / 3600.0 AS other_hours
+    SUM(CASE WHEN a.sport = 'Run' THEN COALESCE(a.duration_s, 0) ELSE 0 END) / 3600.0 AS run_hours,
+    SUM(CASE WHEN a.sport = 'Ride' THEN COALESCE(a.duration_s, 0) ELSE 0 END) / 3600.0 AS ride_hours,
+    SUM(CASE WHEN a.sport NOT IN ('Run', 'Ride') THEN COALESCE(a.duration_s, 0) ELSE 0 END) / 3600.0 AS other_hours
 FROM activities a
 LEFT JOIN key_sessions ks ON ks.activity_id = a.id
 GROUP BY date(a.start_time, 'weekday 1', '-7 days');
