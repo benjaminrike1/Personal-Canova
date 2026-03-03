@@ -175,7 +175,8 @@
     "match_type": "exact",
     "source_name": "Abelnes - Andabeløy",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1022126200",
@@ -2849,7 +2850,8 @@
     "match_type": "manual_guess",
     "source_name": "",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013498126",
@@ -2975,7 +2977,8 @@
     "match_type": "normalized",
     "source_name": "Anda - Lote",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 1
+    "fartsomrade_sdir": 1,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013561790",
@@ -3273,7 +3276,8 @@
     "match_type": "exact",
     "source_name": "Andenes - Gryllefjord",
     "eu_havomrade": "C",
-    "fartsomrade_sdir": 5
+    "fartsomrade_sdir": 5,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013509140",
@@ -3571,7 +3575,8 @@
     "match_type": "normalized",
     "source_name": "Arasvika - Hennset",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 1
+    "fartsomrade_sdir": 1,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013498128",
@@ -4820,8 +4825,9 @@
     "operator": "Fjord1",
     "match_type": "manual_guess",
     "source_name": "Askvoll - Gjervik",
-    "eu_havomrade": "B",
-    "fartsomrade_sdir": "ukjent"
+    "eu_havomrade": "C",
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "fallback_original"
   },
   {
     "id": "1013498130",
@@ -5838,8 +5844,9 @@
     "operator": "Fjord1",
     "match_type": "normalized",
     "source_name": "Askvoll - Fure - Værlandet",
-    "eu_havomrade": "B",
-    "fartsomrade_sdir": "ukjent"
+    "eu_havomrade": "C",
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "fallback_original"
   },
   {
     "id": "1013509082",
@@ -5913,7 +5920,8 @@
     "match_type": "normalized",
     "source_name": "Aukra - Hollingsholmen",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013498804",
@@ -5951,7 +5959,8 @@
     "match_type": "normalized",
     "source_name": "Barmen - Barmsund",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": "ukjent"
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763016790",
@@ -6001,7 +6010,8 @@
     "match_type": "fuzzy",
     "source_name": "Belvik - Vengsøy",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763022171",
@@ -75378,8 +75388,9 @@
     "operator": "Torghatten",
     "match_type": "normalized",
     "source_name": "Bodø - Værøy - Røst - Moskenes",
-    "eu_havomrade": "C",
-    "fartsomrade_sdir": 5
+    "eu_havomrade": "B",
+    "fartsomrade_sdir": 5,
+    "eu_havomrade_method": "cross_check"
   },
   {
     "id": "763022177",
@@ -77965,7 +77976,8 @@
     "match_type": "normalized",
     "source_name": "Bognes - Lødingen",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763022114",
@@ -78307,7 +78319,8 @@
     "match_type": "normalized",
     "source_name": "Bognes - Skarberget",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013513921",
@@ -78709,7 +78722,8 @@
     "match_type": "normalized",
     "source_name": "Borgan - Ramstadlandet",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013557358",
@@ -78919,7 +78933,8 @@
     "match_type": "exact",
     "source_name": "Botnhamn - Brensholmen",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013512962",
@@ -79161,7 +79176,8 @@
     "match_type": "normalized",
     "source_name": "Brattvåg - Dryna",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013497795",
@@ -79290,8 +79306,9 @@
     "operator": "Gulen skyssbåtservice",
     "match_type": "normalized",
     "source_name": "Breistein - Valestrand",
-    "eu_havomrade": "B",
-    "fartsomrade_sdir": "ukjent"
+    "eu_havomrade": "D",
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "fallback_sheltered"
   },
   {
     "id": "763016789",
@@ -79365,7 +79382,8 @@
     "match_type": "fuzzy",
     "source_name": "Brevikeidet - Svensby",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013513085",
@@ -79899,7 +79917,8 @@
     "match_type": "normalized",
     "source_name": "Brekstad - Valset",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1015605719",
@@ -81501,7 +81520,8 @@
     "match_type": "manual_guess",
     "source_name": "",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1017528309",
@@ -81559,7 +81579,8 @@
     "match_type": "exact",
     "source_name": "Brevik - Sandøya",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763175362",
@@ -81696,8 +81717,9 @@
     "operator": "Vidar Hop Skyssbåter",
     "match_type": "manual_guess",
     "source_name": "Sauren/Stortorgnes - Brønnøysund",
-    "eu_havomrade": "C",
-    "fartsomrade_sdir": 4
+    "eu_havomrade": "D",
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013498805",
@@ -81731,7 +81753,8 @@
     "match_type": "normalized",
     "source_name": "Daløy - Haldorsneset",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763022176",
@@ -81805,7 +81828,8 @@
     "match_type": "normalized",
     "source_name": "Digermulen - Finnvik",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763022178",
@@ -81959,7 +81983,8 @@
     "match_type": "normalized",
     "source_name": "Drag - Kjøpsvik",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013513084",
@@ -83197,7 +83222,8 @@
     "match_type": "normalized",
     "source_name": "Dypfest - Tarva",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 5
+    "fartsomrade_sdir": 5,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1015215994",
@@ -83462,8 +83488,9 @@
     "operator": "Torghatten",
     "match_type": "manual_guess",
     "source_name": "Dyrøy - Mausundvær - Sula",
-    "eu_havomrade": "C",
-    "fartsomrade_sdir": 5
+    "eu_havomrade": "D",
+    "fartsomrade_sdir": 5,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013509150",
@@ -83641,7 +83668,8 @@
     "match_type": "normalized",
     "source_name": "Edøya - Sandvika",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013506715",
@@ -83835,7 +83863,8 @@
     "match_type": "normalized",
     "source_name": "Eidsdal - Linge",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013513919",
@@ -83980,8 +84009,9 @@
     "operator": "Torghatten",
     "match_type": "normalized",
     "source_name": "Eidshaug - Gjerdinga",
-    "eu_havomrade": "C",
-    "fartsomrade_sdir": 4
+    "eu_havomrade": "D",
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013497794",
@@ -84207,7 +84237,8 @@
     "match_type": "normalized",
     "source_name": "Fedje - Sævrøy",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 1
+    "fartsomrade_sdir": 1,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763022179",
@@ -84429,7 +84460,8 @@
     "match_type": "normalized",
     "source_name": "Festvåg - Misten",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1018095513",
@@ -84783,7 +84815,8 @@
     "match_type": "normalized",
     "source_name": "Festøya - Hundeidvika",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1018095511",
@@ -84993,7 +85026,8 @@
     "match_type": "normalized",
     "source_name": "Festøya - Solavågen",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1017311852",
@@ -96819,7 +96853,8 @@
     "match_type": "manual_guess",
     "source_name": "",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": "ukjent"
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1017329321",
@@ -97540,8 +97575,9 @@
     "operator": "Norled",
     "match_type": "normalized",
     "source_name": "Fjelberg - Sydnes - Utbjoa",
-    "eu_havomrade": "B",
-    "fartsomrade_sdir": "ukjent"
+    "eu_havomrade": "C",
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "fallback_original"
   },
   {
     "id": "1015605058",
@@ -97622,8 +97658,9 @@
     "operator": "Innlandstrafikk",
     "match_type": "manual_guess",
     "source_name": "",
-    "eu_havomrade": "B",
-    "fartsomrade_sdir": "ukjent"
+    "eu_havomrade": "inland",
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "inland_lake"
   },
   {
     "id": "1013511128",
@@ -98849,7 +98886,8 @@
     "match_type": "normalized",
     "source_name": "Flakk - Rørvik",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763022115",
@@ -98883,7 +98921,8 @@
     "match_type": "normalized",
     "source_name": "Forøy - Ågskardet",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1021411757",
@@ -98937,7 +98976,8 @@
     "match_type": "exact",
     "source_name": "Garten - Storfosna",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1016273324",
@@ -100059,7 +100099,8 @@
     "match_type": "normalized",
     "source_name": "Garten - Storfosna - Leksa - Værnes",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1015604923",
@@ -100361,7 +100402,8 @@
     "match_type": "exact",
     "source_name": "Geiranger - Hellesylt",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 1
+    "fartsomrade_sdir": 1,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013497168",
@@ -101723,7 +101765,8 @@
     "match_type": "exact",
     "source_name": "Gjermundshamn - Varaldsøy - Årsnes",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1022125509",
@@ -105861,7 +105904,8 @@
     "match_type": "manual_guess",
     "source_name": "",
     "eu_havomrade": "C",
-    "fartsomrade_sdir": 5
+    "fartsomrade_sdir": 5,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013460951",
@@ -106551,7 +106595,8 @@
     "match_type": "exact",
     "source_name": "Halhjem - Sandvikvåg",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013497316",
@@ -106873,7 +106918,8 @@
     "match_type": "normalized",
     "source_name": "Halhjem - Våge",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013511096",
@@ -106971,7 +107017,8 @@
     "match_type": "normalized",
     "source_name": "Halsa - Kanestraum",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763016780",
@@ -107457,7 +107504,8 @@
     "match_type": "exact",
     "source_name": "Hansnes - Karlsøy - Vannøy",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763016784",
@@ -107495,7 +107543,8 @@
     "match_type": "manual_guess",
     "source_name": "Hansnes - Stakkvik",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 1
+    "fartsomrade_sdir": 1,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013508409",
@@ -107621,7 +107670,8 @@
     "match_type": "normalized",
     "source_name": "Hareid - Sulesund",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013497315",
@@ -107715,7 +107765,8 @@
     "match_type": "normalized",
     "source_name": "Hatvik - Venjaneset",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": "ukjent"
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "fallback_sheltered"
   },
   {
     "id": "1013506447",
@@ -109365,7 +109416,8 @@
     "match_type": "manual_guess",
     "source_name": "",
     "eu_havomrade": "B",
-    "fartsomrade_sdir": "ukjent"
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "fallback_original"
   },
   {
     "id": "1013499007",
@@ -109391,7 +109443,8 @@
     "match_type": "exact",
     "source_name": "Hisarøy - Mjånes",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013507444",
@@ -112189,7 +112242,8 @@
     "match_type": "manual_guess",
     "source_name": "Hjelmeland - Nesvik - Skipavik",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 1
+    "fartsomrade_sdir": 1,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013513881",
@@ -113087,7 +113141,8 @@
     "match_type": "normalized",
     "source_name": "Hofles - Geisnes - Lund",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763022207",
@@ -116145,7 +116200,8 @@
     "match_type": "exact",
     "source_name": "Horn - Igerøy",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 5
+    "fartsomrade_sdir": 5,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763022133",
@@ -116379,7 +116435,8 @@
     "match_type": "normalized",
     "source_name": "Horn - Andalsvåg",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013497317",
@@ -116580,8 +116637,9 @@
     "operator": "Fjord1",
     "match_type": "exact",
     "source_name": "Husavik - Sandvikvåg",
-    "eu_havomrade": "B",
-    "fartsomrade_sdir": "ukjent"
+    "eu_havomrade": "C",
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "fallback_original"
   },
   {
     "id": "1015605000",
@@ -119426,8 +119484,9 @@
     "operator": "Torghatten",
     "match_type": "manual_guess",
     "source_name": "",
-    "eu_havomrade": "C",
-    "fartsomrade_sdir": 4
+    "eu_havomrade": "D",
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763022204",
@@ -119757,7 +119816,8 @@
     "match_type": "normalized",
     "source_name": "Igerøy - Tjøtta",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 5
+    "fartsomrade_sdir": 5,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013506480",
@@ -120474,8 +120534,9 @@
     "operator": "Fjord1",
     "match_type": "exact",
     "source_name": "Jektevik - Nordhuglo - Hodnanes",
-    "eu_havomrade": "B",
-    "fartsomrade_sdir": "ukjent"
+    "eu_havomrade": "D",
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "fallback_sheltered"
   },
   {
     "id": "763022116",
@@ -120949,7 +121010,8 @@
     "match_type": "normalized",
     "source_name": "Jektvik - Kilboghamn",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013497314",
@@ -121047,7 +121109,8 @@
     "match_type": "normalized",
     "source_name": "Jondal - Tørvikbygd",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763022166",
@@ -122633,7 +122696,8 @@
     "match_type": "manual_guess",
     "source_name": "",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013497809",
@@ -123035,7 +123099,8 @@
     "match_type": "manual_guess",
     "source_name": "Gudvangen - Kaupanger",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013497319",
@@ -123121,7 +123186,8 @@
     "match_type": "normalized",
     "source_name": "Kinsarvik - Utne",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013497312",
@@ -124019,7 +124085,8 @@
     "match_type": "normalized",
     "source_name": "Klokkarvik - Lerøy - Bjelkarøy - Hjellestad",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1026111145",
@@ -124093,7 +124160,8 @@
     "match_type": "manual_guess",
     "source_name": "Strømsnes - Kjerringholmen",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763016794",
@@ -124195,7 +124263,8 @@
     "match_type": "manual_guess",
     "source_name": "Nyvoll - Eidsnes",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 1
+    "fartsomrade_sdir": 1,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1017101768",
@@ -132084,8 +132153,9 @@
     "operator": "Kragerø fjordbåtselskap",
     "match_type": "manual_guess",
     "source_name": "Kragerø - Skåtøy - Stabbestad",
-    "eu_havomrade": "C",
-    "fartsomrade_sdir": 4
+    "eu_havomrade": "D",
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1017101769",
@@ -133303,7 +133373,8 @@
     "match_type": "fuzzy",
     "source_name": "Kragerø - Skåtøy - Stabbestad",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013497313",
@@ -133577,7 +133648,8 @@
     "match_type": "normalized",
     "source_name": "Krokeide - Hufthamar",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 1
+    "fartsomrade_sdir": 1,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013506481",
@@ -133683,7 +133755,8 @@
     "match_type": "normalized",
     "source_name": "Kvanndal - Utne",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 1
+    "fartsomrade_sdir": 1,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013509128",
@@ -133837,7 +133910,8 @@
     "match_type": "normalized",
     "source_name": "Kvanne - Rykkjem",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 1
+    "fartsomrade_sdir": 1,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013497323",
@@ -134062,8 +134136,9 @@
     "operator": "Fjord1",
     "match_type": "exact",
     "source_name": "Langevåg - Buavåg",
-    "eu_havomrade": "B",
-    "fartsomrade_sdir": "ukjent"
+    "eu_havomrade": "D",
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "fallback_sheltered"
   },
   {
     "id": "1013509126",
@@ -137033,7 +137108,8 @@
     "match_type": "normalized",
     "source_name": "Larsnes - Åram - Voksa - Kvamsøya",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013504176",
@@ -137127,7 +137203,8 @@
     "match_type": "exact",
     "source_name": "Launes - Kvellandstrand",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013508489",
@@ -138713,7 +138790,8 @@
     "match_type": "exact",
     "source_name": "Lauvvik - Lysebotn",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 1
+    "fartsomrade_sdir": 1,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013507452",
@@ -139002,8 +139080,9 @@
     "operator": "Fartøysdrift AS",
     "match_type": "exact",
     "source_name": "Lauvvik - Oanes",
-    "eu_havomrade": "B",
-    "fartsomrade_sdir": "ukjent"
+    "eu_havomrade": "D",
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "fallback_sheltered"
   },
   {
     "id": "1013497814",
@@ -139333,7 +139412,8 @@
     "match_type": "normalized",
     "source_name": "Lavik - Oppedal",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013497796",
@@ -139662,8 +139742,9 @@
     "operator": "Fjord1",
     "match_type": "normalized",
     "source_name": "Leirvåg - Sløvåg",
-    "eu_havomrade": "B",
-    "fartsomrade_sdir": "ukjent"
+    "eu_havomrade": "D",
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "fallback_sheltered"
   },
   {
     "id": "1013513728",
@@ -139749,7 +139830,8 @@
     "match_type": "normalized",
     "source_name": "Levanger - Hokstad",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763016788",
@@ -139847,7 +139929,8 @@
     "match_type": "exact",
     "source_name": "Lyngseidet - Olderdalen",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013497807",
@@ -140153,7 +140236,8 @@
     "match_type": "exact",
     "source_name": "Mannheller - Fodnes",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013497815",
@@ -140182,8 +140266,9 @@
     "operator": "Wergeland-Halsvik",
     "match_type": "normalized",
     "source_name": "Masfjordnes - Duesund",
-    "eu_havomrade": "B",
-    "fartsomrade_sdir": "ukjent"
+    "eu_havomrade": "D",
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "fallback_sheltered"
   },
   {
     "id": "1013507960",
@@ -141184,8 +141269,9 @@
     "operator": "Boreal",
     "match_type": "exact",
     "source_name": "Mekjarvik - Kvitsøy",
-    "eu_havomrade": "B",
-    "fartsomrade_sdir": "ukjent"
+    "eu_havomrade": "C",
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "fallback_original"
   },
   {
     "id": "763022175",
@@ -141378,8 +141464,9 @@
     "operator": "Torghatten",
     "match_type": "normalized",
     "source_name": "Melbu - Fiskebøl",
-    "eu_havomrade": "C",
-    "fartsomrade_sdir": 3
+    "eu_havomrade": "D",
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763016783",
@@ -141509,7 +141596,8 @@
     "match_type": "exact",
     "source_name": "Mikkelvik - Bromnes",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013509083",
@@ -142351,7 +142439,8 @@
     "match_type": "normalized",
     "source_name": "Molde - Sekken",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013509080",
@@ -143425,7 +143514,8 @@
     "match_type": "normalized",
     "source_name": "Molde - Vestnes",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013508011",
@@ -144962,8 +145052,9 @@
     "operator": "Fjord1",
     "match_type": "exact",
     "source_name": "Mortavika - Arsvågen",
-    "eu_havomrade": "B",
-    "fartsomrade_sdir": "ukjent"
+    "eu_havomrade": "C",
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "fallback_original"
   },
   {
     "id": "1017382337",
@@ -150381,7 +150472,8 @@
     "match_type": "normalized",
     "source_name": "Mosjøen - Hundåla",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013504594",
@@ -150479,7 +150571,8 @@
     "match_type": "exact",
     "source_name": "Moss - Horten",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013498129",
@@ -151897,7 +151990,8 @@
     "match_type": "exact",
     "source_name": "Måløy - Husevågøy - Oldeide",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763022117",
@@ -152203,7 +152297,8 @@
     "match_type": "normalized",
     "source_name": "Nesna - Levang",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763022195",
@@ -152809,7 +152904,8 @@
     "match_type": "normalized",
     "source_name": "Nesna - Nesnaøyene",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013497812",
@@ -153179,7 +153275,8 @@
     "match_type": "manual_guess",
     "source_name": "",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "762982732",
@@ -153237,7 +153334,8 @@
     "match_type": "fuzzy",
     "source_name": "Refsnes - Flesnes",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1016315608",
@@ -155795,7 +155893,8 @@
     "match_type": "manual_guess",
     "source_name": "",
     "eu_havomrade": "C",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763016777",
@@ -158501,7 +158600,8 @@
     "match_type": "fuzzy",
     "source_name": "Rotsund - Havnnes",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013507475",
@@ -210831,7 +210931,8 @@
     "match_type": "manual_guess",
     "source_name": "",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 1
+    "fartsomrade_sdir": 1,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013497813",
@@ -214209,7 +214310,8 @@
     "match_type": "fuzzy",
     "source_name": "Rysjedalsvika - Rutledal - Krakhella - Losna",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1019225637",
@@ -222570,8 +222672,9 @@
     "operator": "Torghatten",
     "match_type": "manual_guess",
     "source_name": "",
-    "eu_havomrade": "C",
-    "fartsomrade_sdir": 4
+    "eu_havomrade": "D",
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763022202",
@@ -225853,7 +225956,8 @@
     "match_type": "normalized",
     "source_name": "Sandnessjøen - Dønna - Løkta",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013509149",
@@ -226126,8 +226230,9 @@
     "operator": "Fjord1",
     "match_type": "normalized",
     "source_name": "Seivika - Tømmervåg",
-    "eu_havomrade": "C",
-    "fartsomrade_sdir": 4
+    "eu_havomrade": "D",
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013513920",
@@ -226225,7 +226330,8 @@
     "match_type": "normalized",
     "source_name": "Skei - Gutvik",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013497169",
@@ -226482,8 +226588,9 @@
     "operator": "Fjord1",
     "match_type": "exact",
     "source_name": "Skjersholmane - Ranavik",
-    "eu_havomrade": "B",
-    "fartsomrade_sdir": "ukjent"
+    "eu_havomrade": "C",
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "fallback_original"
   },
   {
     "id": "1013497173",
@@ -227401,7 +227508,8 @@
     "match_type": "normalized",
     "source_name": "Skånevik - Matre - Utåker",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 1
+    "fartsomrade_sdir": 1,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013514480",
@@ -239259,7 +239367,8 @@
     "match_type": "normalized",
     "source_name": "Småge - Orta - Finnøya - Sandøya - Ona",
     "eu_havomrade": "C",
-    "fartsomrade_sdir": 5
+    "fartsomrade_sdir": 5,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763022124",
@@ -239397,7 +239506,8 @@
     "match_type": "exact",
     "source_name": "Solfjellsjøen - Vandve",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 5
+    "fartsomrade_sdir": 5,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013509084",
@@ -239475,7 +239585,8 @@
     "match_type": "normalized",
     "source_name": "Solholmen - Mordalsvågen",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013497806",
@@ -239557,7 +239668,8 @@
     "match_type": "fuzzy",
     "source_name": "Solvorn - Ornes",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013514010",
@@ -243031,7 +243143,8 @@
     "match_type": "manual_guess",
     "source_name": "Standal - Trandal - Sæbø - Skår",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1019037296",
@@ -248092,8 +248205,9 @@
     "operator": "Norled",
     "match_type": "manual_guess",
     "source_name": "",
-    "eu_havomrade": "B",
-    "fartsomrade_sdir": "ukjent"
+    "eu_havomrade": "C",
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "fallback_original"
   },
   {
     "id": "1013509058",
@@ -248338,8 +248452,9 @@
     "operator": "Rødne",
     "match_type": "exact",
     "source_name": "Stavanger - Vassøy",
-    "eu_havomrade": "B",
-    "fartsomrade_sdir": "ukjent"
+    "eu_havomrade": "D",
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "fallback_sheltered"
   },
   {
     "id": "763022200",
@@ -249388,8 +249503,9 @@
     "operator": "Norled",
     "match_type": "normalized",
     "source_name": "Stokkvågen - Onøy - Sleneset - Lovund",
-    "eu_havomrade": "C",
-    "fartsomrade_sdir": 5
+    "eu_havomrade": "D",
+    "fartsomrade_sdir": 5,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763022201",
@@ -253527,7 +253643,8 @@
     "match_type": "normalized",
     "source_name": "Stokkvågen - Træna",
     "eu_havomrade": "C",
-    "fartsomrade_sdir": 5
+    "fartsomrade_sdir": 5,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "762982731",
@@ -253657,7 +253774,8 @@
     "match_type": "exact",
     "source_name": "Stornes - Bjørnerå",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1019173196",
@@ -255115,7 +255233,8 @@
     "match_type": "fuzzy",
     "source_name": "Storstein - Nikkeby - Lauksundsskaret",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013506716",
@@ -255221,7 +255340,8 @@
     "match_type": "normalized",
     "source_name": "Stranda - Liabygda",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013498127",
@@ -255287,7 +255407,8 @@
     "match_type": "normalized",
     "source_name": "Stårheim - Isane",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763022181",
@@ -255649,7 +255770,8 @@
     "match_type": "normalized",
     "source_name": "Sund - Horsdal - Sørarnøy",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 5
+    "fartsomrade_sdir": 5,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013513727",
@@ -255731,7 +255853,8 @@
     "match_type": "exact",
     "source_name": "Svelvik - Verket",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763022174",
@@ -259813,7 +259936,8 @@
     "match_type": "normalized",
     "source_name": "Svolvær - Skrova - Skutvik",
     "eu_havomrade": "C",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013508408",
@@ -259967,7 +260091,8 @@
     "match_type": "normalized",
     "source_name": "Sykkylven - Magerholm",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013514014",
@@ -260145,7 +260270,8 @@
     "match_type": "exact",
     "source_name": "Sæbø - Leknes",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 1
+    "fartsomrade_sdir": 1,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "762935973",
@@ -260367,7 +260493,8 @@
     "match_type": "manual_guess",
     "source_name": "Stangenes - Sørrollnes",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 5
+    "fartsomrade_sdir": 5,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763022203",
@@ -264057,7 +264184,8 @@
     "match_type": "normalized",
     "source_name": "Søvik - Herøy",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 5
+    "fartsomrade_sdir": 5,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013504619",
@@ -264222,8 +264350,9 @@
     "operator": "Innlandstrafikk",
     "match_type": "exact",
     "source_name": "Tangen - Horn",
-    "eu_havomrade": "B",
-    "fartsomrade_sdir": "ukjent"
+    "eu_havomrade": "inland",
+    "fartsomrade_sdir": "ukjent",
+    "eu_havomrade_method": "inland_lake"
   },
   {
     "id": "763022132",
@@ -270797,7 +270926,8 @@
     "match_type": "exact",
     "source_name": "Tjøtta - Forvik",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013497811",
@@ -271999,7 +272129,8 @@
     "match_type": "exact",
     "source_name": "Vangsnes - Hella - Dragsvik",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763022134",
@@ -272217,7 +272348,8 @@
     "match_type": "normalized",
     "source_name": "Vennesund - Holm",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013509079",
@@ -272467,7 +272599,8 @@
     "match_type": "normalized",
     "source_name": "Volda - Folkestad",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013509073",
@@ -272673,7 +272806,8 @@
     "match_type": "normalized",
     "source_name": "Volda - Lauvstad",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013509081",
@@ -272867,7 +273001,8 @@
     "match_type": "normalized",
     "source_name": "Åfarnes - Sølsnes",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013510823",
@@ -273109,7 +273244,8 @@
     "match_type": "normalized",
     "source_name": "Årvika - Koparneset",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763016797",
@@ -274071,7 +274207,8 @@
     "match_type": "exact",
     "source_name": "Øksfjord - Bergsfjord - Sør-Tverrfjord",
     "eu_havomrade": "C",
-    "fartsomrade_sdir": 4
+    "fartsomrade_sdir": 4,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763016796",
@@ -274773,7 +274910,8 @@
     "match_type": "exact",
     "source_name": "Øksfjord - Hasvik",
     "eu_havomrade": "C",
-    "fartsomrade_sdir": 5
+    "fartsomrade_sdir": 5,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "763016799",
@@ -274875,7 +275013,8 @@
     "match_type": "exact",
     "source_name": "Øksfjord - Tverrfjord",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 3
+    "fartsomrade_sdir": 3,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013513886",
@@ -274965,7 +275104,8 @@
     "match_type": "normalized",
     "source_name": "Ølhammeren - Seierstad",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 2
+    "fartsomrade_sdir": 2,
+    "eu_havomrade_method": "wms"
   },
   {
     "id": "1013517648",
@@ -276151,6 +276291,7 @@
     "match_type": "manual_guess",
     "source_name": "Meløysund - Ørnes",
     "eu_havomrade": "D",
-    "fartsomrade_sdir": 5
+    "fartsomrade_sdir": 5,
+    "eu_havomrade_method": "wms"
   }
 ]

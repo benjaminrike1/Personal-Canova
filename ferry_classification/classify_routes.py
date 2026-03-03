@@ -12,14 +12,25 @@ The STRICTEST area the route passes through determines its classification
 (A is strictest, D is mildest).
 
 Method:
-  Primary: WMS pixel sampling from kart.sdir.no official polygon layers.
-    Downloads transparent PNG tiles from the WMS for EU havomrade layers
-    (layer_81 = C year-round, layer_83 = D year-round) and checks whether
-    route coordinates fall within the colored (opaque) polygon areas.
-    Uses radius search around each point to handle shore-based coordinates.
+  1. Primary: WMS pixel sampling from kart.sdir.no official polygon layers.
+     Downloads transparent PNG tiles from the WMS for EU havomrade layers
+     (layer_81 = C year-round, layer_83 = D year-round) and checks whether
+     route coordinates fall within the colored (opaque) polygon areas.
+     Uses radius search around each point to handle shore-based coordinates.
+     Terminal points (docks) get larger radius; mid-route points use tight
+     radius to avoid false matches from nearby polygons.
 
-  Fallback for routes not in D or C: classified as B (within 20 nm of coast).
-  Routes without coordinates: marked as "ukjent" (unknown).
+  2. Mid-route exposure check: If C polygon is found at some points but
+     mid-route points are NOT in any polygon (C or D), the route passes
+     through B-territory open water → classified as B.
+
+  3. Per-route tile refinement: B-classified routes get re-checked with
+     high-resolution per-route WMS tiles for narrow waterways.
+
+  4. Fallback for remaining unresolved routes (still B after refinement):
+     - Inland lake routes → "inland" (EU directive does not apply)
+     - Short crossings (< 6 km span) → D (clearly sheltered)
+     - Otherwise → use original 'fartsomrade' field from data source
 
 Data sources:
   - kart.sdir.no WMS: ogc.sdir.no/mapserv.ashx (GUI=1 auth)
@@ -84,9 +95,19 @@ TILES = [
 ]
 
 # Radius search parameters
-# At 3°lat / 4096px ≈ 80m/px, radius 60px ≈ 5km
-RADIUS_D = 60   # Search radius for D polygon (shore→water gap)
-RADIUS_C = 40   # Search radius for C polygon
+# At 3°lat / 4096px ≈ 80m/px, so 1px ≈ 80m
+#
+# Terminal points (docks/shores) need large radius to bridge the gap
+# between shore-based coordinates and water-only polygons.
+# Mid-route points should be firmly in water — use tight radius to
+# avoid grabbing nearby polygons that don't actually cover the route.
+RADIUS_D_TERMINAL = 60   # D radius for terminals (~5 km)
+RADIUS_C_TERMINAL = 25   # C radius for terminals (~2 km)
+RADIUS_D_MID = 15        # D radius for mid-route (~1.2 km)
+RADIUS_C_MID = 5         # C radius for mid-route (~400 m)
+
+# Inland ferry routes on freshwater lakes (EU directive does not apply)
+INLAND_ROUTES = {"Fjone - Nissedal", "Tangen - Horn"}
 
 
 # ── WMS tile download ─────────────────────────────────────────────────────
@@ -211,6 +232,31 @@ def search_nearby(img, cx, cy, max_radius):
     return False, -1
 
 
+# ── Helpers ───────────────────────────────────────────────────────────────
+
+def haversine_km(lat1, lon1, lat2, lon2):
+    """Great-circle distance between two points in km."""
+    R = 6371.0
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    a = (math.sin(dlat / 2) ** 2
+         + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2))
+         * math.sin(dlon / 2) ** 2)
+    return R * 2 * math.asin(math.sqrt(a))
+
+
+def route_max_span_km(coords):
+    """Max distance between any two coordinate pairs (km)."""
+    mx = 0.0
+    for i in range(len(coords)):
+        for j in range(i + 1, len(coords)):
+            d = haversine_km(coords[i][0], coords[i][1],
+                             coords[j][0], coords[j][1])
+            if d > mx:
+                mx = d
+    return mx
+
+
 # ── Route classification ──────────────────────────────────────────────────
 
 def classify_route(coords, c_tiles, d_tiles):
@@ -218,12 +264,18 @@ def classify_route(coords, c_tiles, d_tiles):
     Classify a route by EU havomrade using WMS pixel sampling.
 
     For each sampled point along the route, checks the C and D polygon layers.
-    Uses radius search to handle shore-based terminal coordinates.
+    Terminal points (first/last) get generous search radius to bridge the gap
+    between shore-based coordinates and water-only polygons. Mid-route points
+    use tight radius — they should be in water where polygons exist, so a
+    match at large radius would be a false positive from a nearby zone.
 
     Logic (strictest area wins):
-      - If any point is in C polygon → C
-      - If any point is in D polygon → D
-      - Otherwise → B (within coastal zone but outside C/D)
+      - Check ALL sample points (don't stop at first C hit)
+      - If C found at some points but mid-route points are outside all
+        polygons → route passes through B-territory → B
+      - If C found and no unresolved mid-route exposure → C
+      - If only D found → D
+      - Otherwise → B (will be refined by fallback)
     """
     if not coords or len(coords) < 2:
         return "ukjent"
@@ -246,31 +298,51 @@ def classify_route(coords, c_tiles, d_tiles):
         indices = sorted(set(list(range(0, n, step)) + [n - 1]))
         sample = [unique_coords[i] for i in indices]
 
+    n_sample = len(sample)
     c_found = False
     d_found = False
+    unresolved_mid = 0
+    total_mid = 0
 
-    for lat, lon in sample:
+    for idx, (lat, lon) in enumerate(sample):
         tile = find_tile(lat, lon)
         if tile is None:
             continue
 
         px, py = latlon_to_pixel(lat, lon, tile)
 
+        # Terminal points (first 2 / last 2) get generous radius
+        is_terminal = (idx < 2 or idx >= n_sample - 2)
+        r_c = RADIUS_C_TERMINAL if is_terminal else RADIUS_C_MID
+        r_d = RADIUS_D_TERMINAL if is_terminal else RADIUS_D_MID
+
+        in_c = False
+        in_d = False
+
         # Check C layer
-        if tile in c_tiles and not c_found:
-            found, _ = search_nearby(c_tiles[tile], px, py, RADIUS_C)
+        if tile in c_tiles:
+            found, _ = search_nearby(c_tiles[tile], px, py, r_c)
             if found:
+                in_c = True
                 c_found = True
 
         # Check D layer
-        if tile in d_tiles and not d_found:
-            found, _ = search_nearby(d_tiles[tile], px, py, RADIUS_D)
+        if tile in d_tiles:
+            found, _ = search_nearby(d_tiles[tile], px, py, r_d)
             if found:
+                in_d = True
                 d_found = True
 
-        # C is strictest — if found, no need to continue
-        if c_found:
-            break
+        # Track mid-route exposure (points not in any polygon)
+        if not is_terminal:
+            total_mid += 1
+            if not in_c and not in_d:
+                unresolved_mid += 1
+
+    # If C found but significant mid-route exposure outside all polygons,
+    # the route passes through open water (B territory)
+    if c_found and total_mid > 0 and unresolved_mid / total_mid > 0.3:
+        return "B"
 
     if c_found:
         return "C"
@@ -285,7 +357,8 @@ def refine_b_routes(data, c_tiles, d_tiles):
     Re-check B-classified routes with per-route high-resolution tiles.
 
     Downloads tight WMS tiles around each B route for better resolution
-    in narrow waterways.
+    in narrow waterways. Uses moderate radius (40px) — enough to bridge
+    shore→water gap but not so large as to grab unrelated polygons.
     """
     b_routes = [d for d in data if d.get("eu_havomrade") == "B"]
     if not b_routes:
@@ -331,7 +404,7 @@ def refine_b_routes(data, c_tiles, d_tiles):
                     px = max(0, min(w - 1, px))
                     py = max(0, min(h - 1, py))
 
-                    found, _ = search_nearby(img, px, py, 100)
+                    found, _ = search_nearby(img, px, py, 40)
                     if found:
                         new_area = area
                         break
@@ -343,13 +416,106 @@ def refine_b_routes(data, c_tiles, d_tiles):
 
         if new_area:
             d["eu_havomrade"] = new_area
+            d["eu_havomrade_method"] = "wms_refined"
             reclassified += 1
             print(f"    {d['navn']}: B → {new_area}")
 
     if reclassified:
         print(f"  Reclassified {reclassified} routes")
     else:
-        print(f"  All B routes confirmed")
+        print(f"  No routes reclassified by per-route tiles")
+
+
+def apply_fallback_classification(data):
+    """
+    Classify routes that WMS polygons could not resolve.
+
+    After WMS classification + per-route refinement, remaining B routes
+    are ones where the SDIR polygon simply doesn't cover the waterway
+    (narrow fjords, small straits) or are genuinely in open water.
+
+    Fallback strategy:
+      1. Inland lake routes → "inland" (EU directive not applicable)
+      2. Short crossings (< 6 km) → D (clearly sheltered narrow waterways)
+      3. Original 'fartsomrade' field → use as-is (B, C, or D)
+    """
+    b_routes = [d for d in data if d.get("eu_havomrade") == "B"]
+    if not b_routes:
+        return
+
+    print(f"\n  Applying fallback for {len(b_routes)} unresolved routes...")
+    changes = {"D": 0, "C": 0, "B": 0, "inland": 0}
+
+    for route in b_routes:
+        name = route.get("navn", "")
+
+        # 1. Inland lakes
+        if name in INLAND_ROUTES:
+            route["eu_havomrade"] = "inland"
+            route["eu_havomrade_method"] = "inland_lake"
+            changes["inland"] += 1
+            print(f"    {name}: B → inland (freshwater lake)")
+            continue
+
+        fo_orig = route.get("fartsomrade", "")
+        coords = route.get("coords", [])
+        span_km = route_max_span_km(coords) if coords else 0
+
+        # 2. If original says B, trust it (genuinely exposed)
+        if fo_orig == "B":
+            route["eu_havomrade_method"] = "fallback_original"
+            changes["B"] += 1
+            print(f"    {name}: B confirmed (original={fo_orig}, span={span_km:.1f}km)")
+            continue
+
+        # 3. Short crossings → D (sheltered narrow waterways not covered by WMS)
+        if span_km < 6.0:
+            route["eu_havomrade"] = "D"
+            route["eu_havomrade_method"] = "fallback_sheltered"
+            changes["D"] += 1
+            print(f"    {name}: B → D (sheltered, span={span_km:.1f}km)")
+            continue
+
+        # 4. Use original classification as fallback
+        if fo_orig in ("C", "D"):
+            route["eu_havomrade"] = fo_orig
+            route["eu_havomrade_method"] = "fallback_original"
+            changes[fo_orig] += 1
+            print(f"    {name}: B → {fo_orig} (original={fo_orig}, span={span_km:.1f}km)")
+        else:
+            route["eu_havomrade_method"] = "fallback_default"
+            changes["B"] += 1
+            print(f"    {name}: B confirmed (no fallback data)")
+
+    parts = ", ".join(f"{k}={v}" for k, v in sorted(changes.items()) if v)
+    print(f"  Fallback results: {parts}")
+
+
+def cross_check_classification(data):
+    """
+    Final cross-check: override WMS classification when it conflicts with
+    strong evidence from the original regulatory classification.
+
+    Specifically: if a long route has fo_orig=B (genuinely exposed open-water
+    route), the WMS finding C at an endpoint doesn't mean the whole route is C.
+    The mid-route open water makes it B.
+    """
+    overrides = 0
+    for route in data:
+        eu = route.get("eu_havomrade")
+        fo_orig = route.get("fartsomrade", "")
+        fo_sdir = route.get("fartsomrade_sdir", "ukjent")
+        span = route_max_span_km(route.get("coords", []))
+
+        # Route classified as C but original says B and it's a long exposed route
+        if eu == "C" and fo_orig == "B" and span > 20.0:
+            route["eu_havomrade"] = "B"
+            route["eu_havomrade_method"] = "cross_check"
+            overrides += 1
+            print(f"    {route['navn']}: C → B (original=B, span={span:.1f}km)")
+
+    if overrides:
+        print(f"  Cross-check overrode {overrides} routes")
 
 
 # ── Summary ───────────────────────────────────────────────────────────────
@@ -365,30 +531,41 @@ def print_summary(data):
     print("=" * 60)
 
     print("\nEU Havomrade (classified):")
-    for area in ["A", "B", "C", "D", "ukjent"]:
+    for area in ["A", "B", "C", "D", "inland", "ukjent"]:
         count = eu_counts.get(area, 0)
         if count > 0:
             bar = "#" * min(count, 60)
             suffix = f"... ({count})" if count > 60 else ""
-            print(f"  {area}: {count:>4}  {bar}{suffix}")
+            print(f"  {area:>6}: {count:>4}  {bar}{suffix}")
     print(f"\n  Total: {sum(eu_counts.values())}")
 
-    # Show C routes specifically
+    # Show inland routes
+    inland = [d for d in data if d.get("eu_havomrade") == "inland"]
+    if inland:
+        print(f"\nInland routes ({len(inland)}) — EU directive not applicable:")
+        for d in sorted(inland, key=lambda x: x["navn"]):
+            print(f"  {d['navn']} ({d.get('fylke', '')})")
+
+    # Show C routes
     c_routes = [d for d in data if d.get("eu_havomrade") == "C"]
     if c_routes:
         print(f"\nRoutes classified as C ({len(c_routes)}):")
         for d in sorted(c_routes, key=lambda x: x["navn"]):
-            print(f"  {d['navn']} ({d.get('fylke', '')})")
+            method = d.get("eu_havomrade_method", "wms")
+            span = route_max_span_km(d.get("coords", []))
+            print(f"  {d['navn']:50s} {span:5.1f}km  [{method}]")
 
     # Show B routes
     b_routes = [d for d in data if d.get("eu_havomrade") == "B"]
     if b_routes:
         print(f"\nRoutes classified as B ({len(b_routes)}):")
         for d in sorted(b_routes, key=lambda x: x["navn"]):
-            print(f"  {d['navn']} ({d.get('fylke', '')})")
+            method = d.get("eu_havomrade_method", "wms")
+            span = route_max_span_km(d.get("coords", []))
+            print(f"  {d['navn']:50s} {span:5.1f}km  [{method}]")
 
     # Compare with fartsomrade_sdir
-    print("\nCross-reference with fartsomrade (Sjøfartsdirektoratet):")
+    print("\nCross-reference with fartsomrade_sdir (fetch-based):")
     for eu_area in ["D", "C", "B"]:
         routes = [d for d in data if d.get("eu_havomrade") == eu_area]
         if routes:
@@ -401,8 +578,14 @@ def print_summary(data):
             )
             print(f"  EU {eu_area} ({len(routes)} routes) → {parts}")
 
+    # Show method breakdown
+    method_counts = Counter(d.get("eu_havomrade_method", "wms") for d in data)
+    print(f"\nClassification method breakdown:")
+    for method, count in sorted(method_counts.items()):
+        print(f"  {method}: {count}")
+
     print("\n" + "-" * 60)
-    print("Method: WMS pixel sampling from kart.sdir.no")
+    print("Method: WMS pixel sampling from kart.sdir.no + fallback")
     print(f"  WMS: {WMS_BASE}")
     print("  Layers: layer_81 (C year-round), layer_83 (D year-round)")
 
@@ -423,10 +606,10 @@ def main():
     print(f"\nLoaded {len(data)} ferry routes from {SAMBAND_FILE.name}")
 
     # ── Download WMS tiles ────────────────────────────────────────────
-    print("\n[1/3] Ensuring WMS tile data...")
+    print("\n[1/6] Ensuring WMS tile data...")
     ensure_tiles()
 
-    print("\n[2/3] Loading tile images...")
+    print("\n[2/6] Loading tile images...")
     c_tiles, d_tiles = load_tiles()
     print(f"  C tiles: {len(c_tiles)}, D tiles: {len(d_tiles)}")
 
@@ -435,18 +618,32 @@ def main():
         sys.exit(1)
 
     # ── Classify routes ───────────────────────────────────────────────
-    print(f"\n[3/3] Classifying {len(data)} routes...")
+    print(f"\n[3/6] Classifying {len(data)} routes (WMS pixel sampling)...")
 
     for i, samband in enumerate(data):
         coords = samband.get("coords", [])
         area = classify_route(coords, c_tiles, d_tiles)
         samband["eu_havomrade"] = area
+        samband["eu_havomrade_method"] = "wms"
 
         if (i + 1) % 30 == 0 or i == len(data) - 1:
             print(f"  {i + 1}/{len(data)} routes processed...")
 
-    # Re-check B routes with higher resolution
+    from collections import Counter
+    initial = Counter(d["eu_havomrade"] for d in data)
+    print(f"  Initial: D={initial.get('D',0)}, C={initial.get('C',0)}, B={initial.get('B',0)}")
+
+    # Re-check B routes with higher resolution per-route tiles
+    print(f"\n[4/6] Refining B routes with per-route WMS tiles...")
     refine_b_routes(data, c_tiles, d_tiles)
+
+    # Apply fallback classification for remaining unresolved routes
+    print(f"\n[5/6] Fallback classification for unresolved routes...")
+    apply_fallback_classification(data)
+
+    # Cross-check: override when WMS conflicts with strong evidence
+    print(f"\n[6/6] Cross-checking classifications...")
+    cross_check_classification(data)
 
     # ── Save results ──────────────────────────────────────────────────
     with open(SAMBAND_FILE, "w", encoding="utf-8") as f:
@@ -458,6 +655,7 @@ def main():
     csv_fields = [
         "id", "navn", "type", "status", "fylke", "kontrakt",
         "lat", "lon", "fartsomrade", "fartsomrade_sdir", "eu_havomrade",
+        "eu_havomrade_method",
         "operator", "match_type", "source_name", "coords",
     ]
     with open(csv_path, "w", encoding="utf-8-sig", newline="\r\n") as f:
