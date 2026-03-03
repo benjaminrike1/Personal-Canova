@@ -1,0 +1,10 @@
+# Intermediate/debug WMS tiles (non-transparent RGB versions)
+eu_tiles/
+# Debug test images
+eu_test_gui1.png
+eu_C_summer.png
+eu_C_year.png
+eu_D_summer.png
+eu_D_year.png
+# Debug per-route check images
+eu_tiles_rgba/check_*.png
