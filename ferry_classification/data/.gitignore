@@ -8,3 +8,8 @@ eu_D_summer.png
 eu_D_year.png
 # Debug per-route check images
 eu_tiles_rgba/check_*.png
+# Large coastline shapefiles (downloaded on demand)
+GSHHS_shp/
+ne_10m_land/
+# OSM data extracts
+osm_coastline_*.json

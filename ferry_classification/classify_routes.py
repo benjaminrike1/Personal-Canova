@@ -434,10 +434,17 @@ def apply_fallback_classification(data):
     are ones where the SDIR polygon simply doesn't cover the waterway
     (narrow fjords, small straits) or are genuinely in open water.
 
+    NOTE: The 'fartsomrade' field (B/C/D) in the source data represents
+    the passenger SHIP CLASS certification, NOT the EU sea area of the
+    route. A Class C ship can operate in both areas C and D. Therefore
+    fartsomrade=C does NOT mean the route is in sea area C.
+
     Fallback strategy:
       1. Inland lake routes → "inland" (EU directive not applicable)
-      2. Short crossings (< 6 km) → D (clearly sheltered narrow waterways)
-      3. Original 'fartsomrade' field → use as-is (B, C, or D)
+      2. Ship class B (fo_orig=B) → B (ship needs B cert = genuinely exposed)
+      3. Short crossings (< 6 km) → D (clearly sheltered narrow waterways)
+      4. Longer crossings outside D polygon → C (conservative default;
+         if D polygon doesn't cover it, assume at least C exposure)
     """
     b_routes = [d for d in data if d.get("eu_havomrade") == "B"]
     if not b_routes:
@@ -461,11 +468,11 @@ def apply_fallback_classification(data):
         coords = route.get("coords", [])
         span_km = route_max_span_km(coords) if coords else 0
 
-        # 2. If original says B, trust it (genuinely exposed)
+        # 2. Ship class B → genuinely exposed route
         if fo_orig == "B":
-            route["eu_havomrade_method"] = "fallback_original"
+            route["eu_havomrade_method"] = "fallback_shipclass_B"
             changes["B"] += 1
-            print(f"    {name}: B confirmed (original={fo_orig}, span={span_km:.1f}km)")
+            print(f"    {name}: B confirmed (ship class B, span={span_km:.1f}km)")
             continue
 
         # 3. Short crossings → D (sheltered narrow waterways not covered by WMS)
@@ -476,16 +483,11 @@ def apply_fallback_classification(data):
             print(f"    {name}: B → D (sheltered, span={span_km:.1f}km)")
             continue
 
-        # 4. Use original classification as fallback
-        if fo_orig in ("C", "D"):
-            route["eu_havomrade"] = fo_orig
-            route["eu_havomrade_method"] = "fallback_original"
-            changes[fo_orig] += 1
-            print(f"    {name}: B → {fo_orig} (original={fo_orig}, span={span_km:.1f}km)")
-        else:
-            route["eu_havomrade_method"] = "fallback_default"
-            changes["B"] += 1
-            print(f"    {name}: B confirmed (no fallback data)")
+        # 4. Longer crossings outside D polygon → C (conservative default)
+        route["eu_havomrade"] = "C"
+        route["eu_havomrade_method"] = "fallback_conservative"
+        changes["C"] += 1
+        print(f"    {name}: B → C (outside D polygon, span={span_km:.1f}km)")
 
     parts = ", ".join(f"{k}={v}" for k, v in sorted(changes.items()) if v)
     print(f"  Fallback results: {parts}")

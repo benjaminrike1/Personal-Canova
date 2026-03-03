@@ -4827,7 +4827,11 @@
     "source_name": "Askvoll - Gjervik",
     "eu_havomrade": "C",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "fallback_original"
+    "eu_havomrade_method": "fallback_conservative",
+    "fartsomrade_sdir_gshhg": "still_ukjent",
+    "fetch_median_nm": 0.0,
+    "fetch_max_nm": 0.0,
+    "fetch_exposure_pct": 0.0
   },
   {
     "id": "1013498130",
@@ -5846,7 +5850,11 @@
     "source_name": "Askvoll - Fure - Værlandet",
     "eu_havomrade": "C",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "fallback_original"
+    "eu_havomrade_method": "fallback_conservative",
+    "fartsomrade_sdir_gshhg": "still_ukjent",
+    "fetch_median_nm": 0.0,
+    "fetch_max_nm": 0.0,
+    "fetch_exposure_pct": 0.0
   },
   {
     "id": "1013509082",
@@ -5960,7 +5968,11 @@
     "source_name": "Barmen - Barmsund",
     "eu_havomrade": "D",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "wms"
+    "eu_havomrade_method": "wms",
+    "fartsomrade_sdir_gshhg": 1,
+    "fetch_median_nm": 0.24,
+    "fetch_max_nm": 14.76,
+    "fetch_exposure_pct": 0.056
   },
   {
     "id": "763016790",
@@ -79308,7 +79320,11 @@
     "source_name": "Breistein - Valestrand",
     "eu_havomrade": "D",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "fallback_sheltered"
+    "eu_havomrade_method": "fallback_sheltered",
+    "fartsomrade_sdir_gshhg": "still_ukjent",
+    "fetch_median_nm": 0.0,
+    "fetch_max_nm": 0.0,
+    "fetch_exposure_pct": 0.0
   },
   {
     "id": "763016789",
@@ -96854,7 +96870,11 @@
     "source_name": "",
     "eu_havomrade": "D",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "wms"
+    "eu_havomrade_method": "wms",
+    "fartsomrade_sdir_gshhg": 1,
+    "fetch_median_nm": 0.12,
+    "fetch_max_nm": 1.68,
+    "fetch_exposure_pct": 0.0
   },
   {
     "id": "1017329321",
@@ -97577,7 +97597,11 @@
     "source_name": "Fjelberg - Sydnes - Utbjoa",
     "eu_havomrade": "C",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "fallback_original"
+    "eu_havomrade_method": "fallback_conservative",
+    "fartsomrade_sdir_gshhg": "still_ukjent",
+    "fetch_median_nm": 0.0,
+    "fetch_max_nm": 0.0,
+    "fetch_exposure_pct": 0.0
   },
   {
     "id": "1015605058",
@@ -97660,7 +97684,11 @@
     "source_name": "",
     "eu_havomrade": "inland",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "inland_lake"
+    "eu_havomrade_method": "inland_lake",
+    "fartsomrade_sdir_gshhg": "still_ukjent",
+    "fetch_median_nm": 0.0,
+    "fetch_max_nm": 0.0,
+    "fetch_exposure_pct": 0.0
   },
   {
     "id": "1013511128",
@@ -107766,7 +107794,11 @@
     "source_name": "Hatvik - Venjaneset",
     "eu_havomrade": "D",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "fallback_sheltered"
+    "eu_havomrade_method": "fallback_sheltered",
+    "fartsomrade_sdir_gshhg": "still_ukjent",
+    "fetch_median_nm": 0.0,
+    "fetch_max_nm": 0.0,
+    "fetch_exposure_pct": 0.0
   },
   {
     "id": "1013506447",
@@ -109417,7 +109449,11 @@
     "source_name": "",
     "eu_havomrade": "B",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "fallback_original"
+    "eu_havomrade_method": "fallback_shipclass_B",
+    "fartsomrade_sdir_gshhg": "still_ukjent",
+    "fetch_median_nm": 0.0,
+    "fetch_max_nm": 0.0,
+    "fetch_exposure_pct": 0.0
   },
   {
     "id": "1013499007",
@@ -116639,7 +116675,11 @@
     "source_name": "Husavik - Sandvikvåg",
     "eu_havomrade": "C",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "fallback_original"
+    "eu_havomrade_method": "fallback_conservative",
+    "fartsomrade_sdir_gshhg": "still_ukjent",
+    "fetch_median_nm": 0.0,
+    "fetch_max_nm": 0.0,
+    "fetch_exposure_pct": 0.0
   },
   {
     "id": "1015605000",
@@ -120536,7 +120576,11 @@
     "source_name": "Jektevik - Nordhuglo - Hodnanes",
     "eu_havomrade": "D",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "fallback_sheltered"
+    "eu_havomrade_method": "fallback_sheltered",
+    "fartsomrade_sdir_gshhg": "still_ukjent",
+    "fetch_median_nm": 0.0,
+    "fetch_max_nm": 0.0,
+    "fetch_exposure_pct": 0.0
   },
   {
     "id": "763022116",
@@ -134138,7 +134182,11 @@
     "source_name": "Langevåg - Buavåg",
     "eu_havomrade": "D",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "fallback_sheltered"
+    "eu_havomrade_method": "fallback_sheltered",
+    "fartsomrade_sdir_gshhg": "still_ukjent",
+    "fetch_median_nm": 0.0,
+    "fetch_max_nm": 0.0,
+    "fetch_exposure_pct": 0.0
   },
   {
     "id": "1013509126",
@@ -139082,7 +139130,11 @@
     "source_name": "Lauvvik - Oanes",
     "eu_havomrade": "D",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "fallback_sheltered"
+    "eu_havomrade_method": "fallback_sheltered",
+    "fartsomrade_sdir_gshhg": "still_ukjent",
+    "fetch_median_nm": 0.0,
+    "fetch_max_nm": 0.0,
+    "fetch_exposure_pct": 0.0
   },
   {
     "id": "1013497814",
@@ -139744,7 +139796,11 @@
     "source_name": "Leirvåg - Sløvåg",
     "eu_havomrade": "D",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "fallback_sheltered"
+    "eu_havomrade_method": "fallback_sheltered",
+    "fartsomrade_sdir_gshhg": "still_ukjent",
+    "fetch_median_nm": 0.0,
+    "fetch_max_nm": 0.0,
+    "fetch_exposure_pct": 0.0
   },
   {
     "id": "1013513728",
@@ -140268,7 +140324,11 @@
     "source_name": "Masfjordnes - Duesund",
     "eu_havomrade": "D",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "fallback_sheltered"
+    "eu_havomrade_method": "fallback_sheltered",
+    "fartsomrade_sdir_gshhg": "still_ukjent",
+    "fetch_median_nm": 0.0,
+    "fetch_max_nm": 0.0,
+    "fetch_exposure_pct": 0.0
   },
   {
     "id": "1013507960",
@@ -141271,7 +141331,11 @@
     "source_name": "Mekjarvik - Kvitsøy",
     "eu_havomrade": "C",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "fallback_original"
+    "eu_havomrade_method": "fallback_conservative",
+    "fartsomrade_sdir_gshhg": "still_ukjent",
+    "fetch_median_nm": 0.0,
+    "fetch_max_nm": 0.0,
+    "fetch_exposure_pct": 0.0
   },
   {
     "id": "763022175",
@@ -145054,7 +145118,11 @@
     "source_name": "Mortavika - Arsvågen",
     "eu_havomrade": "C",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "fallback_original"
+    "eu_havomrade_method": "fallback_conservative",
+    "fartsomrade_sdir_gshhg": "still_ukjent",
+    "fetch_median_nm": 0.0,
+    "fetch_max_nm": 0.0,
+    "fetch_exposure_pct": 0.0
   },
   {
     "id": "1017382337",
@@ -226590,7 +226658,11 @@
     "source_name": "Skjersholmane - Ranavik",
     "eu_havomrade": "C",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "fallback_original"
+    "eu_havomrade_method": "fallback_conservative",
+    "fartsomrade_sdir_gshhg": "still_ukjent",
+    "fetch_median_nm": 0.0,
+    "fetch_max_nm": 0.0,
+    "fetch_exposure_pct": 0.0
   },
   {
     "id": "1013497173",
@@ -248207,7 +248279,11 @@
     "source_name": "",
     "eu_havomrade": "C",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "fallback_original"
+    "eu_havomrade_method": "fallback_conservative",
+    "fartsomrade_sdir_gshhg": "still_ukjent",
+    "fetch_median_nm": 0.0,
+    "fetch_max_nm": 0.0,
+    "fetch_exposure_pct": 0.0
   },
   {
     "id": "1013509058",
@@ -248454,7 +248530,11 @@
     "source_name": "Stavanger - Vassøy",
     "eu_havomrade": "D",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "fallback_sheltered"
+    "eu_havomrade_method": "fallback_sheltered",
+    "fartsomrade_sdir_gshhg": "still_ukjent",
+    "fetch_median_nm": 0.0,
+    "fetch_max_nm": 0.0,
+    "fetch_exposure_pct": 0.0
   },
   {
     "id": "763022200",
@@ -264352,7 +264432,11 @@
     "source_name": "Tangen - Horn",
     "eu_havomrade": "inland",
     "fartsomrade_sdir": "ukjent",
-    "eu_havomrade_method": "inland_lake"
+    "eu_havomrade_method": "inland_lake",
+    "fartsomrade_sdir_gshhg": "still_ukjent",
+    "fetch_median_nm": 0.0,
+    "fetch_max_nm": 0.0,
+    "fetch_exposure_pct": 0.0
   },
   {
     "id": "763022132",
