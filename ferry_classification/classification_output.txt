@@ -1,100 +1,40 @@
 ============================================================
-FERRY ROUTE EU SEA AREA CLASSIFICATION
-============================================================
-
-Loaded 141 ferry routes from samband_data.json
-
-[1/6] Ensuring WMS tile data...
-
-[2/6] Loading tile images...
-  C tiles: 11, D tiles: 11
-
-[3/6] Classifying 141 routes (WMS pixel sampling)...
-  30/141 routes processed...
-  60/141 routes processed...
-  90/141 routes processed...
-  120/141 routes processed...
-  141/141 routes processed...
-  Initial: D=113, C=8, B=20
-
-[4/6] Refining B routes with per-route WMS tiles...
-  Re-checking 20 B routes with per-route tiles...
-    Bodø-Værøy-Røst-Moskenes: B → C
-  Reclassified 1 routes
-
-[5/6] Fallback classification for unresolved routes...
-
-  Applying fallback for 19 unresolved routes...
-    Askvoll-Fure-Gjervik-Askvoll: B → C (outside D polygon, span=6.8km)
-    Askvoll-Fure-Værlandet: B → C (outside D polygon, span=18.8km)
-    Breistein-Valestrand: B → D (sheltered, span=2.2km)
-    Fjelberg-Sydnes-Utbjoa: B → C (outside D polygon, span=9.2km)
-    Fjone - Nissedal: B → inland (freshwater lake)
-    Hatvik-Venjaneset: B → D (sheltered, span=3.2km)
-    Haugesund - Utsira: B confirmed (ship class B, span=23.8km)
-    Husavik - Sandvikvåg: B → C (outside D polygon, span=6.2km)
-    Jektevik - Nordhuglo - Hodnanes: B → D (sheltered, span=3.3km)
-    Langevåg - Buavåg: B → D (sheltered, span=4.8km)
-    Lauvvik - Oanes: B → D (sheltered, span=1.7km)
-    Leirvåg-Sløvåg: B → D (sheltered, span=5.7km)
-    Masfjordnes-Duesund: B → D (sheltered, span=0.8km)
-    Mekjarvik - Kvitsøy: B → C (outside D polygon, span=11.9km)
-    Mortavika - Arsvågen: B → C (outside D polygon, span=8.5km)
-    Skjersholmane - Ranavik: B → C (outside D polygon, span=13.1km)
-    Stavanger - Hommersåk: B → C (outside D polygon, span=9.2km)
-    Stavanger - Vassøy: B → D (sheltered, span=3.8km)
-    Tangen - Horn: B → inland (freshwater lake)
-  Fallback results: B=1, C=8, D=8, inland=2
-
-[6/6] Cross-checking classifications...
-    Bodø-Værøy-Røst-Moskenes: C → B (original=B, span=102.8km)
-  Cross-check overrode 1 routes
-
-Saved to /home/user/Personal-Canova/ferry_classification/samband_data.json
-Saved CSV to /home/user/Personal-Canova/ferry_classification/samband_data.csv
-
-============================================================
-CLASSIFICATION SUMMARY
+FERRY ROUTE EU SEA AREA CLASSIFICATION — v3 (wave-validated)
 ============================================================
 
 EU Havomrade (classified):
        B:    2  ##
-       C:   16  ################
-       D:  121  ############################################################... (121)
+       C:   17  #################
+       D:  120  ############################################################
   inland:    2  ##
-
   Total: 141
 
 Inland routes (2) — EU directive not applicable:
   Fjone - Nissedal (Telemark)
   Tangen - Horn (Innlandet)
 
-Routes classified as C (16):
-  Andenes - Gryllefjord                               36.4km  [wms]
-  Askvoll-Fure-Gjervik-Askvoll                         6.8km  [fallback_conservative]
-  Askvoll-Fure-Værlandet                              18.8km  [fallback_conservative]
-  Fjelberg-Sydnes-Utbjoa                               9.2km  [fallback_conservative]
-  Gunnarnes-Havøysund                                 36.9km  [wms]
-  Husavik - Sandvikvåg                                 6.2km  [fallback_conservative]
-  Mekjarvik - Kvitsøy                                 11.9km  [fallback_conservative]
-  Mortavika - Arsvågen                                 8.5km  [fallback_conservative]
-  Risør-Øysang                                         3.7km  [wms]
-  Skjersholmane - Ranavik                             13.1km  [fallback_conservative]
-  Småge-Orta-Finnøya-Sandøya-Ona                      13.1km  [wms]
-  Stavanger - Hommersåk                                9.2km  [fallback_conservative]
-  Stokkvågen-Træna                                    44.4km  [wms]
-  Svolvær-Skrova-Skutvik                              41.2km  [wms]
-  Øksfjord - Bergsfjord - Sør-Tverrfjord              24.3km  [wms]
-  Øksfjord - Hasvik                                   28.8km  [wms]
+Routes classified as C (17):
+  Andenes - Gryllefjord                              [wms]
+  Askvoll-Fure-Gjervik-Askvoll                       [fallback_conservative]
+  Askvoll-Fure-Værlandet                             [fallback_conservative]
+  Fjelberg-Sydnes-Utbjoa                             [fallback_conservative]
+  Gunnarnes-Havøysund                                [wms]
+  Husavik - Sandvikvåg                               [fallback_conservative]
+  Mekjarvik - Kvitsøy                                [fallback_conservative]
+  Mortavika - Arsvågen                               [fallback_conservative]
+  Risør-Øysang                                       [wms]
+  Skjersholmane - Ranavik                            [fallback_conservative]
+  Småge-Orta-Finnøya-Sandøya-Ona                     [wms]
+  Stavanger - Hommersåk                              [fallback_conservative]
+  Stokkvågen-Onøy-Sleneset-Lovund                    [wave_validated]
+  Stokkvågen-Træna                                   [wms]
+  Svolvær-Skrova-Skutvik                             [wms]
+  Øksfjord - Bergsfjord - Sør-Tverrfjord             [wms]
+  Øksfjord - Hasvik                                  [wms]
 
 Routes classified as B (2):
-  Bodø-Værøy-Røst-Moskenes                           102.8km  [cross_check]
-  Haugesund - Utsira                                  23.8km  [fallback_shipclass_B]
-
-Cross-reference with fartsomrade_sdir (fetch-based):
-  EU D (121 routes) → FO1:14, FO2:31, FO3:30, FO4:26, FO5:10, FOukjent:10
-  EU C (16 routes) → FO3:2, FO4:1, FO5:5, FOukjent:8
-  EU B (2 routes) → FO5:1, FOukjent:1
+  Bodø-Værøy-Røst-Moskenes                           [cross_check]
+  Haugesund - Utsira                                 [fallback_shipclass_B]
 
 Classification method breakdown:
   cross_check: 1
@@ -102,9 +42,10 @@ Classification method breakdown:
   fallback_sheltered: 8
   fallback_shipclass_B: 1
   inland_lake: 2
-  wms: 121
+  wave_validated: 1
+  wms: 120
 
-------------------------------------------------------------
-Method: WMS pixel sampling from kart.sdir.no + fallback
-  WMS: https://ogc.sdir.no/mapserv.ashx
-  Layers: layer_81 (C year-round), layer_83 (D year-round)
+Change from v2:
+  Stokkvågen-Onøy-Sleneset-Lovund: D → C (wave_validated)
+    P(Hs > 1.5m) = 15.9% exceeds 10% D threshold
+    P(Hs > 2.5m) = 4.8% confirms C (< 10%)

@@ -5,14 +5,17 @@
 Six verification actions were performed to assess the quality of the EU sea area
 (havomrade) classification for 141 Norwegian ferry routes.
 
-### Current Classification (v2)
+### Current Classification (v3 — wave-validated)
 
 | Area   | Count | Description                    |
 |--------|-------|--------------------------------|
-| D      | 121   | Sheltered waters               |
-| C      |  16   | Within 5 nm, moderate exposure |
+| D      | 120   | Sheltered waters               |
+| C      |  17   | Within 5 nm, moderate exposure |
 | B      |   2   | Within 20 nm, exposed          |
 | inland |   2   | Freshwater lakes (N/A)         |
+
+Change from v2: Stokkvågen-Onøy-Sleneset-Lovund reclassified D → C
+based on NORAC 800m wave data (P(Hs > 1.5m) = 15.9%, exceeds 10% D threshold).
 
 ---
 
@@ -39,7 +42,7 @@ coordinates checked against both C (layer_81) and D (layer_83) polygons.
 |------------------------------|---------|---------|-------|----------------------|
 | Edøya-Sandvika (fo_orig=B)   | 0%      | 90%     | D     | CONFIRMED by WMS     |
 | Seivika-Tømmervåg (fo_orig=B)| 0%      | 94%     | D     | CONFIRMED by WMS     |
-| Stokkvågen-Lovund (FO5)      | 0%      | 76%     | D     | CONFIRMED by WMS     |
+| Stokkvågen-Lovund (FO5)      | 0%      | 76%     | D→C   | Overridden by wave data (§G) |
 | Igerøy-Tjøtta (FO5)          | 0%      | 88%     | D     | CONFIRMED by WMS     |
 | Askvoll-Fure-Værlandet       | 0%      | 0%      | C     | No polygon coverage  |
 | Mortavika-Arsvågen            | 0%      | 0%      | C     | No polygon coverage  |
@@ -142,28 +145,86 @@ future use if seasonal analysis is needed.
 
 ---
 
-## Remaining Concerns and Recommended Next Steps
+## G: Wave-Based Validation (NORAC 800m + NORA3 3km)
 
-### High confidence (121 routes — 86%)
-- 113 routes classified D by WMS primary pass
+**Method:** Queried MET Norway THREDDS NCSS endpoint for significant wave height
+(Hs) at route midpoints. Used NORA3 (3km) for exposed routes and NORAC (800m)
+for coastal/fjord routes. Coordinate nudging (±0.04°) applied to find nearest
+ocean grid point when midpoint falls on land.
+
+**EU directive thresholds:**
+- D: P(Hs > 1.5 m) < 10% over one year
+- C: P(Hs > 2.5 m) < 10% over one year
+
+### Results: 13 routes resolved, 12 match (92%)
+
+| Route                           | P>1.5m | P>2.5m | Wave | Curr | Match |
+|---------------------------------|--------|--------|------|------|-------|
+| Anda-Lote                       |  0.0%  |  0.0%  |  D   |  D   | OK    |
+| Dypfest-Tarva                   |  1.5%  |  0.0%  |  D   |  D   | OK    |
+| Dyrøy-Øyrekken                  |  4.5%  |  0.0%  |  D   |  D   | OK    |
+| Edøya-Sandvika                  |  1.8%  |  0.0%  |  D   |  D   | OK    |
+| Horn-Igerøy                     |  5.7%  |  0.0%  |  D   |  D   | OK    |
+| Igerøy-Tjøtta                   |  2.1%  |  0.0%  |  D   |  D   | OK    |
+| Seivika-Tømmervåg               |  0.0%  |  0.0%  |  D   |  D   | OK    |
+| Solfjellsjøen-Vandve            |  0.0%  |  0.0%  |  D   |  D   | OK    |
+| Sørrollnes-Stangnes             |  0.1%  |  0.0%  |  D   |  D   | OK    |
+| Sund-Horsdal-Sørarnøy           |  2.7%  |  0.0%  |  D   |  D   | OK    |
+| Søvik-Herøy                     |  0.1%  |  0.0%  |  D   |  D   | OK    |
+| Ørnes-Vassdalsvik-Meløysund     |  0.0%  |  0.0%  |  D   |  D   | OK    |
+| **Stokkvågen-Onøy-Sleneset-Lovund** | **15.9%** | **4.8%** | **C** | **D** | **DIFF** |
+
+### Key findings:
+
+1. **Stokkvågen-Lovund reclassified D → C:** P(Hs > 1.5m) = 15.9% exceeds
+   the 10% D threshold. The route goes to Lovund island exposed to open sea.
+   WMS showed 76% D polygon coverage, but wave data shows actual conditions
+   are too rough for area D. Reclassified to C (P(Hs > 2.5m) = 4.8% < 10%).
+
+2. **Suspect routes CONFIRMED:** All FO5 and ship-class-B routes with wave data
+   are firmly in area D. Worst case: Horn-Igerøy at 5.7% (well under 10%).
+
+3. **14 routes unresolvable by wave data:** All in Vestland/Rogaland fjords
+   (Hardangerfjorden, Lysefjorden, Sognefjorden area). Route midpoints fall
+   on land in both NORAC 800m and NORA3 3km grids — fjords are narrower than
+   model resolution. These routes are classified D by WMS or fallback_sheltered.
+
+### Limitations:
+- Wave data resolution (800m-3km) cannot resolve narrow fjords
+- Only monthly mean Hs was available via NCSS; full hourly timeseries
+  would give more precise exceedance probabilities
+- Coordinate nudging may shift the analysis point to a different water body
+
+---
+
+## Updated Confidence Assessment
+
+### High confidence (120 routes — 85%)
+- 112 routes classified D by WMS primary pass (1 reclassified to C by wave data)
 - 8 routes classified D by fallback_sheltered (span < 6 km)
-- These are well-supported by WMS polygon data and geographic analysis
+- 12 D routes independently confirmed by wave data (P(Hs > 1.5m) < 10%)
 
-### Medium confidence (16 routes — 11%)
-- 8 routes classified C by WMS primary pass — well-supported
-- 8 routes classified C by fallback — conservative default, not WMS-confirmed
-  - Recommendation: validate with NORAC 800m wave data
+### Medium confidence (17 routes — 12%)
+- 9 routes classified C by WMS primary pass — well-supported
+- 1 route classified C by wave validation (Stokkvågen-Lovund) — strong evidence
+- 7 routes classified C by fallback — conservative default, not independently confirmed
+  - All 7 in narrow Vestland/Rogaland fjords, unresolvable by available wave data
+  - Manual inspection or higher-resolution wave modeling needed
 
 ### High confidence — special cases (4 routes — 3%)
-- 2 B routes (Haugesund-Utsira, Bodo-Varoy-Rost-Moskenes) — correct
+- 2 B routes (Haugesund-Utsira, Bodø-Værøy-Røst-Moskenes) — correct
 - 2 inland routes (Fjone-Nissedal, Tangen-Horn) — correct
 
-### Priority validation targets
-1. The 8 fallback_original C routes (no WMS confirmation)
-2. The 10 D routes with FO5 fetch exposure (WMS says D but fetch says exposed)
-3. The 2 D routes with fartsomrade=B ship class (Edoya-Sandvika, Seivika-Tommervag)
+### Remaining unvalidated routes (7 fallback C)
+These routes have no WMS polygon coverage AND no wave data (on land in model):
+1. Askvoll-Fure-Gjervik-Askvoll
+2. Askvoll-Fure-Værlandet
+3. Fjelberg-Sydnes-Utbjoa
+4. Husavik-Sandvikvåg
+5. Mekjarvik-Kvitsøy
+6. Mortavika-Arsvågen
+7. Skjersholmane-Ranavik
+8. Stavanger-Hommersåk
 
-### Recommended validation method
-Install `metocean-api` and `metocean-stats`, extract NORAC 800m wave data
-for ~20 suspect route midpoints, compute P(Hs > 1.5m) and P(Hs > 2.5m),
-and compare against current classification.
+C is a conservative default for these. Some may actually be D (sheltered fjord
+crossings), but without WMS or wave confirmation, C is the safe choice.

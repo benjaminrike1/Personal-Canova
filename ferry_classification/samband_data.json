@@ -249583,9 +249583,11 @@
     "operator": "Norled",
     "match_type": "normalized",
     "source_name": "Stokkvågen - Onøy - Sleneset - Lovund",
-    "eu_havomrade": "D",
+    "eu_havomrade": "C",
     "fartsomrade_sdir": 5,
-    "eu_havomrade_method": "wms"
+    "eu_havomrade_method": "wave_validated",
+    "wave_p_exceed_1_5m": 15.86,
+    "wave_p_exceed_2_5m": 4.75
   },
   {
     "id": "763022201",
